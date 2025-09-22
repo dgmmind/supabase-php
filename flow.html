@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Flowchart Vacío Mejorado</title>
+<style>
+body { margin:0; font-family:sans-serif; display:flex; height:100vh; }
+.sidebar { width:260px; padding:10px; border-right:1px solid #ccc; box-sizing:border-box; }
+.canvas-wrap { flex:1; position:relative; }
+.box { position:absolute; width:150px; height:80px; border:1px solid #000; cursor:move; padding:4px; }
+.box.trigger { background:#d1e7dd; border-color:#0f5132; }
+.box.questions { background:#cff4fc; border-color:#055160; }
+.box.decision { background:#fff3cd; border-color:#664d03; }
+.box.flow { background:#e2e3e5; border-color:#41464b; }
+.box.end { background:#f8d7da; border-color:#842029; }
+.anchor { width:8px; height:8px; border:1px solid #000; border-radius:50%; position:absolute; background:#fff; }
+.anchor[data-pos="top"] { top:-5px; left:50%; transform:translateX(-50%); }
+.anchor[data-pos="bottom"] { bottom:-5px; left:50%; transform:translateX(-50%); }
+.anchor[data-pos="left"] { left:-5px; top:50%; transform:translateY(-50%); }
+.anchor[data-pos="right"] { right:-5px; top:50%; transform:translateY(-50%); }
+.anchor.active-anchor { border-color:red; background:yellow; }
+.conn-line { stroke:#000; stroke-width:2; fill:none; }
+pre { font-size:12px; background:#eee; padding:6px; max-height:40vh; overflow:auto; }
+.anchor.hidden { display: none; } /* Clase para ocultar anchors no permitidos */
+.branches input { margin: 2px 0; width: 100%; box-sizing: border-box; }
+</style>
+</head>
+<body>
+<aside class="sidebar">
+<h3>Flowchart</h3>
+<button id="addTrigger">Agregar Trigger</button>
+<button id="addQuestions">Agregar Questions</button>
+<button id="addDecision">Agregar Decision</button>
+<button id="addFlow">Agregar Flow</button>
+<button id="addEnd">Agregar End</button>
+<button id="clearFlow">Limpiar</button>
+
+<div style="margin-top:10px">
+<strong>JSON en tiempo real:</strong>
+<pre id="jsonView">{}</pre>
+</div>
+</aside>
+
+<div class="canvas-wrap">
+  <div id="canvas" style="width:100%;height:100%">
+    <svg id="svg" width="3000" height="3000" style="position:absolute;left:0;top:0;pointer-events:none"></svg>
+  </div>
+</div>
+
+<script>
+class Box {
+  constructor(flow, id, type, x=40, y=40, title='Nodo') {
+    this.flow = flow; this.id = id; this.type = type; this.x = x; this.y = y; this.w = 150; this.h = 80;
+    this.title = title; this.anchors = {}; this.options = type === 'decision' ? [] : null;
+    this.el = this._createElement();
+    this._enableDrag(); this.updatePosition();
+    if (this.type === 'decision') {
+      this.el.querySelector('.add-branch').addEventListener('click', () => this.addBranch());
+    }
+    this.addAnchors();
+  }
+
+  _createElement() {
+    const el = document.createElement('div');
+    el.className = `box ${this.type}`; el.dataset.id = this.id;
+    let inner = `
+      <strong>${this.title}</strong><br>
+      <small>type: ${this.type}</small>
+    `;
+    if (this.type === 'decision') {
+      inner += `
+        <div class="branches" style="display:flex; flex-direction:column; margin-top:10px;"></div>
+        <button class="add-branch">Agregar Salida</button>
+      `;
+    }
+    el.innerHTML = inner;
+    this.flow.stage.appendChild(el); return el;
+  }
+
+  addAnchors() {
+    if (this.isInputAllowed('left')) this.addAnchor('left');
+    if (this.isOutputAllowed('right')) this.addAnchor('right');
+  }
+
+  addAnchor(pos) {
+    const anchor = document.createElement('div');
+    anchor.className = 'anchor';
+    anchor.dataset.pos = pos;
+    anchor.dataset.box = this.id;
+    this.el.appendChild(anchor);
+    this.anchors[pos] = anchor;
+    if (pos === 'left') {
+      anchor.style.left = '-5px';
+      anchor.style.top = '50%';
+      anchor.style.transform = 'translateY(-50%)';
+    } else if (pos === 'right') {
+      anchor.style.right = '-5px';
+      anchor.style.top = '50%';
+      anchor.style.transform = 'translateY(-50%)';
+    }
+  }
+
+  addBranch() {
+    if (this.type !== 'decision') return;
+    const index = this.options.length;
+    this.options.push(`Opción ${index + 1}`);
+    const inputContainer = document.createElement('div');
+    inputContainer.style.position = 'relative';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = this.options[index];
+    input.dataset.index = index;
+    input.addEventListener('input', e => {
+      this.options[index] = e.target.value;
+      this.flow.updateJSON();
+    });
+    inputContainer.appendChild(input);
+    this.el.querySelector('.branches').appendChild(inputContainer);
+    const pos = `out${index}`;
+    this.addAnchor(pos);
+    this.repositionOutputs();
+    this.h += 30;
+    this.el.style.height = `${this.h}px`;
+    this.flow.requestUpdate();
+    this.flow.updateJSON();
+  }
+
+  repositionOutputs() {
+    if (this.type !== 'decision') return;
+    const inputs = this.el.querySelectorAll('.branches input');
+    inputs.forEach((input, i) => {
+      const pos = `out${i}`;
+      const anchor = this.anchors[pos];
+      if (anchor) {
+        const inputRect = input.getBoundingClientRect();
+        const containerRect = this.el.getBoundingClientRect();
+        const relativeTop = inputRect.top - containerRect.top + inputRect.height / 2;
+        anchor.style.right = '-5px';
+        anchor.style.top = `${relativeTop}px`;
+        anchor.style.bottom = '';
+        anchor.style.left = '';
+        anchor.style.transform = 'translateY(-50%)';
+      }
+    });
+  }
+
+  isInputAllowed(pos) {
+    switch (this.type) {
+      case 'trigger': return false;
+      case 'questions': return pos === 'left';
+      case 'decision': return pos === 'left';
+      case 'flow': return pos === 'left';
+      case 'end': return pos === 'left';
+      default: return false;
+    }
+  }
+
+  isOutputAllowed(pos) {
+    switch (this.type) {
+      case 'trigger': return pos === 'right';
+      case 'questions': return pos === 'right';
+      case 'decision': return pos.startsWith('out');
+      case 'flow': return pos === 'right';
+      case 'end': return false;
+      default: return false;
+    }
+  }
+
+  _enableDrag() {
+    let startX, startY, origX, origY, dragging=false;
+    this.el.addEventListener('mousedown', e => {
+      if(e.target.classList.contains('anchor') || e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
+      dragging=true; startX=e.clientX; startY=e.clientY;
+      origX=this.x; origY=this.y; e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+      if(!dragging) return;
+      this.x = origX + (e.clientX - startX);
+      this.y = origY + (e.clientY - startY);
+      this.updatePosition(); this.flow.requestUpdate();
+    });
+    window.addEventListener('mouseup', () => {
+      if(dragging){ dragging=false; this.flow.updateJSON(); }
+    });
+  }
+
+  getAnchorPos(pos) {
+    const anchorEl = this.anchors[pos];
+    if (!anchorEl || anchorEl.classList.contains('hidden')) return null;
+    const rect = anchorEl.getBoundingClientRect();
+    const canvasRect = this.flow.stage.getBoundingClientRect();
+    return {
+      x: rect.left + rect.width/2 - canvasRect.left,
+      y: rect.top + rect.height/2 - canvasRect.top
+    };
+  }
+
+  updatePosition() {
+    this.el.style.transform = `translate(${this.x}px, ${this.y}px)`;
+    this.repositionOutputs();
+  }
+
+  serialize() { 
+    return {
+      id: this.id,
+      type: this.type,
+      x: this.x,
+      y: this.y,
+      w: this.w,
+      h: this.h,
+      title: this.title,
+      options: this.options
+    }; 
+  }
+
+  destroy() { this.el.remove(); }
+}
+
+class Connector {
+  constructor(flow, id, fromBox, fromAnchor, toBox, toAnchor) {
+    this.flow = flow; this.id = id; this.fromBox = fromBox; this.fromAnchor = fromAnchor;
+    this.toBox = toBox; this.toAnchor = toAnchor;
+    this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    this.path.setAttribute('class', 'conn-line'); this.flow.svg.appendChild(this.path);
+  }
+
+  update() {
+    const a = this.fromBox.getAnchorPos(this.fromAnchor);
+    const b = this.toBox.getAnchorPos(this.toAnchor);
+    if (a && b) {
+      this.path.setAttribute('d', `M ${a.x} ${a.y} L ${b.x} ${b.y}`);
+    }
+  }
+
+  serialize() { return {id: this.id, from: this.fromBox.id, fromAnchor: this.fromAnchor, to: this.toBox.id, toAnchor: this.toAnchor}; }
+
+  destroy() { this.path.remove(); }
+}
+
+// Reglas de conexión por tipo
+const rules = {
+  trigger: ['questions'],
+  questions: ['questions', 'decision', 'end'],
+  decision: ['flow'],
+  flow: ['questions', 'end'],
+  end: []
+};
+
+// Excepciones de convergencia (permitir varios nodos apuntando a un mismo destino)
+const convergenciaPermitida = {
+  questions: ['questions', 'end'],
+  decision: ['end'],
+  flow: ['questions', 'end']
+};
+
+class Flowchart {
+  constructor() {
+    this.stage = document.getElementById('canvas'); this.svg = document.getElementById('svg');
+    this.boxes = new Map(); this.conns = new Map(); this.boxCounter = 0; this.connCounter = 0;
+    this.pendingAnchor = null; this._needsUpdate = false; this._bindEvents();
+  }
+
+  _bindEvents() {
+    document.getElementById('addTrigger').addEventListener('click', () => this.addBox('trigger'));
+    document.getElementById('addQuestions').addEventListener('click', () => this.addBox('questions'));
+    document.getElementById('addDecision').addEventListener('click', () => this.addBox('decision'));
+    document.getElementById('addFlow').addEventListener('click', () => this.addBox('flow'));
+    document.getElementById('addEnd').addEventListener('click', () => this.addBox('end'));
+    document.getElementById('clearFlow').addEventListener('click', () => this.clear());
+
+    // Click sobre anchors
+    this.stage.addEventListener('click', e => {
+      const anchor = e.target.closest('.anchor:not(.hidden)');
+      if (anchor) {
+        const box = this.boxes.get(anchor.dataset.box);
+        const pos = anchor.dataset.pos;
+
+        // Si ya hay una conexión entre el pendingAnchor y este anchor, no marcar
+        if (this.pendingAnchor) {
+          for (const conn of this.conns.values()) {
+            if ((conn.fromBox === this.pendingAnchor.box && conn.toBox === box) || 
+                (conn.fromBox === box && conn.toBox === this.pendingAnchor.box)) {
+              console.warn("❌ Ya existe una conexión entre estos nodos.");
+              this.pendingAnchor.el.classList.remove('active-anchor');
+              this.pendingAnchor = null;
+              return;
+            }
+          }
+        }
+
+        // Si hacemos click en el mismo anchor marcado, lo desmarcamos
+        if (this.pendingAnchor && this.pendingAnchor.box === box && this.pendingAnchor.pos === pos) {
+          this.pendingAnchor.el.classList.remove('active-anchor');
+          this.pendingAnchor = null;
+          return;
+        }
+
+        // Desmarcar anchor previo
+        if (this.pendingAnchor && this.pendingAnchor.el) this.pendingAnchor.el.classList.remove('active-anchor');
+
+        // Marcamos el nuevo anchor
+        anchor.classList.add('active-anchor');
+
+        // Si ya había un anchor marcado previamente (y es diferente), crear conexión
+        if (this.pendingAnchor) {
+          this.createConn(this.pendingAnchor.box, this.pendingAnchor.pos, box, pos);
+          this.pendingAnchor.el.classList.remove('active-anchor');
+          anchor.classList.remove('active-anchor');
+          this.pendingAnchor = null;
+        } else {
+          this.pendingAnchor = { box, pos, el: anchor };
+        }
+        return;
+      }
+
+      // Si hacemos click fuera de un anchor, resetear selección
+      if (this.pendingAnchor) {
+        this.pendingAnchor.el.classList.remove('active-anchor');
+        this.pendingAnchor = null;
+      }
+    });
+  }
+
+  addBox(type, x=60, y=60) {
+    if (type === 'trigger' && Array.from(this.boxes.values()).some(b => b.type === 'trigger')) {
+      console.warn("❌ Solo se permite un nodo Trigger en el flujo.");
+      return;
+    }
+    const id = `b${++this.boxCounter}`;
+    const title = `${type.toUpperCase()} ${this.boxCounter}`;
+    const box = new Box(this, id, type, x, y, title);
+    this.boxes.set(id, box); this.updateJSON(); return box;
+  }
+
+  hasFlowBetween(fromBox, toBox) {
+    const visited = new Set();
+    const stack = [fromBox];
+    while (stack.length) {
+      const box = stack.pop();
+      if (box === toBox) return true;
+      visited.add(box);
+      for (const conn of this.conns.values()) {
+        if (conn.fromBox === box && !visited.has(conn.toBox)) {
+          stack.push(conn.toBox);
+        }
+      }
+    }
+    return false;
+  }
+
+  createConn(fromBox, fromAnchor, toBox, toAnchor) {
+    if (fromBox === toBox) {
+      console.warn("❌ No se puede conectar un nodo a sí mismo.");
+      return;
+    }
+
+    // Restricción: fromAnchor debe ser salida, toAnchor debe ser entrada
+    if (!fromBox.isOutputAllowed(fromAnchor)) {
+      console.warn(`❌ El anchor ${fromAnchor} en ${fromBox.type} no es una salida permitida.`);
+      return;
+    }
+    if (!toBox.isInputAllowed(toAnchor)) {
+      console.warn(`❌ El anchor ${toAnchor} en ${toBox.type} no es una entrada permitida.`);
+      return;
+    }
+
+    // Restricción: Trigger solo se conecta a una Question (máximo una conexión saliente)
+    if (fromBox.type === 'trigger') {
+      const outgoingConns = Array.from(this.conns.values()).filter(conn => conn.fromBox === fromBox);
+      if (outgoingConns.length > 0) {
+        console.warn(`❌ El Trigger solo puede conectarse a una Question.`);
+        return;
+      }
+      if (toBox.type !== 'questions') {
+        console.warn(`❌ El Trigger solo puede conectarse a una Question.`);
+        return;
+      }
+    }
+
+    // Nueva restricción: Questions solo permite una entrada desde un Flow
+    if (toBox.type === 'questions' && fromBox.type === 'flow') {
+      const flowIncomingConns = Array.from(this.conns.values()).filter(
+        conn => conn.toBox === toBox && conn.fromBox.type === 'flow'
+      );
+      if (flowIncomingConns.length > 0) {
+        console.warn(`❌ El nodo Questions ${toBox.title} ya tiene una conexión entrante desde un Flow.`);
+        return;
+      }
+    }
+
+    // Restricción: No permitir conexiones entre nodos del mismo tipo, salvo excepciones
+    if (fromBox.type === toBox.type && !convergenciaPermitida[fromBox.type]?.includes(toBox.type)) {
+      console.warn(`❌ No se permite conectar un nodo ${fromBox.type} a otro ${toBox.type}.`);
+      return;
+    }
+
+    // Restricción: Solo un Trigger puede conectar a un nodo Questions
+    if (fromBox.type === 'trigger' && toBox.type === 'questions') {
+      const existingTriggerConn = Array.from(this.conns.values()).some(
+        conn => conn.toBox === toBox && conn.fromBox.type === 'trigger'
+      );
+      if (existingTriggerConn) {
+        console.warn(`❌ El nodo ${toBox.title} ya tiene un Trigger conectado.`);
+        return;
+      }
+    }
+
+    // Restricción: Limitar conexiones entrantes a nodos no convergentes
+    if (!convergenciaPermitida[fromBox.type]?.includes(toBox.type)) {
+      const incomingConns = Array.from(this.conns.values()).filter(conn => conn.toBox === toBox);
+      if (incomingConns.length > 0) {
+        console.warn(`❌ El nodo ${toBox.title} ya tiene una conexión entrante y no permite convergencia.`);
+        return;
+      }
+    }
+
+    // Verificar si el tipo de nodo destino está permitido
+    if (!rules[fromBox.type].includes(toBox.type)) {
+      console.warn(`❌ Un nodo de tipo ${fromBox.type} no puede conectar a un nodo de tipo ${toBox.type}.`);
+      return;
+    }
+
+    // Verificar flujo duplicado directo/indirecto
+    const esConvergencia = convergenciaPermitida[fromBox.type]?.includes(toBox.type) || false;
+    if (!esConvergencia && this.hasFlowBetween(fromBox, toBox)) {
+      console.warn(`❌ Ya existe un flujo desde ${fromBox.title} hasta ${toBox.title} (directo o indirecto).`);
+      return;
+    }
+
+    // Crear conexión
+    const id = `c${++this.connCounter}`;
+    const conn = new Connector(this, id, fromBox, fromAnchor, toBox, toAnchor);
+    this.conns.set(id, conn);
+    this.requestUpdate();
+    this.updateJSON();
+    return conn;
+  }
+
+  requestUpdate() {
+    if (this._needsUpdate) return;
+    this._needsUpdate = true;
+    requestAnimationFrame(() => {
+      this._needsUpdate = false;
+      this._render();
+    });
+  }
+
+  _render() {
+    for (const c of this.conns.values()) c.update();
+  }
+
+  updateJSON() {
+    const data = {
+      boxes: [...this.boxes.values()].map(b => b.serialize()),
+      conns: [...this.conns.values()].map(c => c.serialize())
+    };
+    document.getElementById('jsonView').textContent = JSON.stringify(data, null, 2);
+  }
+
+  clear() {
+    for (const b of this.boxes.values()) b.destroy();
+    this.boxes.clear();
+    for (const c of this.conns.values()) c.destroy();
+    this.conns.clear();
+    this.boxCounter = 0;
+    this.connCounter = 0;
+    this.updateJSON();
+  }
+}
+
+const FLOW = new Flowchart();
+</script>
+</body>
+</html>
