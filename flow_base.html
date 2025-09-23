@@ -3,223 +3,45 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Flowchart Minimalista</title>
+<title>Flowchart Vacío Mejorado</title>
 <style>
-* { box-sizing: border-box; }
-body { 
-  margin: 0; 
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; 
-  display: flex; 
-  height: 100vh; 
-  background: #fafafa;
-  color: #333;
-}
-
-.sidebar { 
-  width: 240px; 
-  padding: 20px; 
-  background: #fff;
-  border-right: 1px solid #e5e5e5;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.sidebar h3 {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #111;
-}
-
-button {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  background: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.15s ease;
-}
-
-button:hover {
-  background: #f8f8f8;
-  border-color: #ccc;
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
-#clearFlow {
-  background: #f5f5f5;
-  color: #666;
-  margin-top: 8px;
-}
-
-#clearFlow:hover {
-  background: #eee;
-}
-
-.canvas-wrap { 
-  flex: 1; 
-  position: relative; 
-  background: #fafafa;
-}
-
-.box { 
-  position: absolute; 
-  width: 140px; 
-  min-height: 70px; 
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  cursor: move; 
-  padding: 12px;
-  font-size: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  transition: box-shadow 0.15s ease;
-}
-
-.box:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-}
-
-.box strong {
-  font-size: 13px;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.box small {
-  color: #666;
-  font-size: 11px;
-}
-
-.box.trigger { border-left: 3px solid #10b981; }
-.box.questions { border-left: 3px solid #3b82f6; }
-.box.decision { border-left: 3px solid #f59e0b; }
-.box.flow { border-left: 3px solid #8b5cf6; }
-.box.end { border-left: 3px solid #ef4444; }
-
-.anchor { 
-  width: 6px; 
-  height: 6px; 
-  border: 1px solid #999; 
-  border-radius: 50%; 
-  position: absolute; 
-  background: #fff;
-  transition: all 0.15s ease;
-}
-
-.anchor:hover {
-  width: 8px;
-  height: 8px;
-  border-color: #666;
-  background: #f0f0f0;
-}
-
-.anchor[data-pos="left"] { 
-  left: -4px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-}
-
-.anchor[data-pos="right"] { 
-  right: -4px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-}
-
+body { margin:0; font-family:sans-serif; display:flex; height:100vh; }
+.sidebar { width:260px; padding:10px; border-right:1px solid #ccc; box-sizing:border-box; }
+.canvas-wrap { flex:1; position:relative; }
+.box { position:absolute; width:150px; height:80px; border:1px solid #000; cursor:move; padding:4px; }
+.box.trigger { background:#d1e7dd; border-color:#0f5132; }
+.box.questions { background:#cff4fc; border-color:#055160; }
+.box.decision { background:#fff3cd; border-color:#664d03; }
+.box.flow { background:#e2e3e5; border-color:#41464b; }
+.box.end { background:#f8d7da; border-color:#842029; }
+.anchor { width:8px; height:8px; border:1px solid #000; border-radius:50%; position:absolute; background:#fff; }
+.anchor[data-pos="top"] { top:-5px; left:50%; transform:translateX(-50%); }
+.anchor[data-pos="bottom"] { bottom:-5px; left:50%; transform:translateX(-50%); }
+.anchor[data-pos="left"] { left:-5px; top:50%; transform:translateY(-50%); }
+.anchor[data-pos="right"] { right:-5px; top:50%; transform:translateY(-50%); }
 .anchor.active-anchor {
-  border-color: #3b82f6;
-  background: #3b82f6;
-  width: 8px;
-  height: 8px;
-}
-
-.conn-line { 
-  stroke: #666; 
-  stroke-width: 1.5; 
-  fill: none;
-  opacity: 0.8;
-}
-
-.json-section {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e5e5e5;
-}
-
-.json-section strong {
-  font-size: 12px;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-pre { 
-  font-size: 10px; 
-  background: #f8f8f8; 
-  padding: 12px; 
-  border-radius: 6px;
-  max-height: 200px; 
-  overflow: auto;
-  margin: 8px 0 0 0;
-  border: 1px solid #e5e5e5;
-  color: #555;
-}
-
-.anchor.hidden { display: none; }
-
-.branches {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin: 8px 0;
-}
-
-.branches input { 
-  padding: 4px 6px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 11px;
-  background: #fafafa;
-}
-
-.branches input:focus {
-  outline: none;
-  border-color: #3b82f6;
-  background: #fff;
-}
-
-.add-branch {
-  font-size: 10px !important;
-  padding: 4px 8px !important;
-  margin-top: 4px;
-  background: #f8f8f8 !important;
-  color: #666 !important;
-}
-
-.add-branch:hover {
-  background: #eee !important;
-}
+  border-color:red;
+  background:yellow; 
+  border: 3px solid #000;
+  }
+.conn-line { stroke:#000; stroke-width:2; fill:none; }
+pre { font-size:12px; background:#eee; padding:6px; max-height:40vh; overflow:auto; }
+.anchor.hidden { display: none; } /* Clase para ocultar anchors no permitidos */
+.branches input { margin: 2px 0; width: 100%; box-sizing: border-box; }
 </style>
 </head>
 <body>
 <aside class="sidebar">
 <h3>Flowchart</h3>
-<button id="addTrigger">+ Trigger</button>
-<button id="addQuestions">+ Questions</button>
-<button id="addDecision">+ Decision</button>
-<button id="addFlow">+ Flow</button>
-<button id="addEnd">+ End</button>
-<button id="clearFlow">Limpiar Todo</button>
+<button id="addTrigger">Agregar Trigger</button>
+<button id="addQuestions">Agregar Questions</button>
+<button id="addDecision">Agregar Decision</button>
+<button id="addFlow">Agregar Flow</button>
+<button id="addEnd">Agregar End</button>
+<button id="clearFlow">Limpiar</button>
 
-<div class="json-section">
-<strong>JSON Output</strong>
+<div style="margin-top:10px">
+<strong>JSON en tiempo real:</strong>
 <pre id="jsonView">{}</pre>
 </div>
 </aside>
@@ -232,9 +54,8 @@ pre {
 
 <script>
 class Box {
-  constructor(flow, id, type, x=60, y=60, title='Nodo') {
-    this.flow = flow; this.id = id; this.type = type; this.x = x; this.y = y; 
-    this.w = 140; this.h = 70;
+  constructor(flow, id, type, x=40, y=40, title='Nodo') {
+    this.flow = flow; this.id = id; this.type = type; this.x = x; this.y = y; this.w = 150; this.h = 80;
     this.title = title; this.anchors = {}; this.options = type === 'decision' ? [] : null;
     this.el = this._createElement();
     this._enableDrag(); this.updatePosition();
@@ -248,13 +69,13 @@ class Box {
     const el = document.createElement('div');
     el.className = `box ${this.type}`; el.dataset.id = this.id;
     let inner = `
-      <strong>${this.title}</strong>
-      <small>${this.type}</small>
+      <strong>${this.title}</strong><br>
+      <small>type: ${this.type}</small>
     `;
     if (this.type === 'decision') {
       inner += `
-        <div class="branches"></div>
-        <button class="add-branch">+ Opción</button>
+        <div class="branches" style="display:flex; flex-direction:column; margin-top:10px;"></div>
+        <button class="add-branch">Agregar Salida</button>
       `;
     }
     el.innerHTML = inner;
@@ -273,12 +94,23 @@ class Box {
     anchor.dataset.box = this.id;
     this.el.appendChild(anchor);
     this.anchors[pos] = anchor;
+    if (pos === 'left') {
+      anchor.style.left = '-5px';
+      anchor.style.top = '50%';
+      anchor.style.transform = 'translateY(-50%)';
+    } else if (pos === 'right') {
+      anchor.style.right = '-5px';
+      anchor.style.top = '50%';
+      anchor.style.transform = 'translateY(-50%)';
+    }
   }
 
   addBranch() {
     if (this.type !== 'decision') return;
     const index = this.options.length;
     this.options.push(`Opción ${index + 1}`);
+    const inputContainer = document.createElement('div');
+    inputContainer.style.position = 'relative';
     const input = document.createElement('input');
     input.type = 'text';
     input.value = this.options[index];
@@ -287,12 +119,13 @@ class Box {
       this.options[index] = e.target.value;
       this.flow.updateJSON();
     });
-    this.el.querySelector('.branches').appendChild(input);
+    inputContainer.appendChild(input);
+    this.el.querySelector('.branches').appendChild(inputContainer);
     const pos = `out${index}`;
     this.addAnchor(pos);
     this.repositionOutputs();
-    this.h += 25;
-    this.el.style.minHeight = `${this.h}px`;
+    this.h += 30;
+    this.el.style.height = `${this.h}px`;
     this.flow.requestUpdate();
     this.flow.updateJSON();
   }
@@ -307,21 +140,35 @@ class Box {
         const inputRect = input.getBoundingClientRect();
         const containerRect = this.el.getBoundingClientRect();
         const relativeTop = inputRect.top - containerRect.top + inputRect.height / 2;
-        anchor.style.right = '-4px';
+        anchor.style.right = '-5px';
         anchor.style.top = `${relativeTop}px`;
+        anchor.style.bottom = '';
+        anchor.style.left = '';
         anchor.style.transform = 'translateY(-50%)';
       }
     });
   }
 
   isInputAllowed(pos) {
-    return this.type !== 'trigger' && pos === 'left';
+    switch (this.type) {
+      case 'trigger': return false;
+      case 'questions': return pos === 'left';
+      case 'decision': return pos === 'left';
+      case 'flow': return pos === 'left';
+      case 'end': return pos === 'left';
+      default: return false;
+    }
   }
 
   isOutputAllowed(pos) {
-    if (this.type === 'end') return false;
-    if (this.type === 'decision') return pos.startsWith('out');
-    return pos === 'right';
+    switch (this.type) {
+      case 'trigger': return pos === 'right';
+      case 'questions': return pos === 'right';
+      case 'decision': return pos.startsWith('out');
+      case 'flow': return pos === 'right';
+      case 'end': return false;
+      default: return false;
+    }
   }
 
   _enableDrag() {
@@ -360,8 +207,14 @@ class Box {
 
   serialize() { 
     return {
-      id: this.id, type: this.type, x: this.x, y: this.y,
-      w: this.w, h: this.h, title: this.title, options: this.options
+      id: this.id,
+      type: this.type,
+      x: this.x,
+      y: this.y,
+      w: this.w,
+      h: this.h,
+      title: this.title,
+      options: this.options
     }; 
   }
 
@@ -376,26 +229,37 @@ class Connector {
     this.path.setAttribute('class', 'conn-line'); this.flow.svg.appendChild(this.path);
   }
 
+  //lINEAS RECTA
+
+  // update() {
+  //   const a = this.fromBox.getAnchorPos(this.fromAnchor);
+  //   const b = this.toBox.getAnchorPos(this.toAnchor);
+  //   if (a && b) {
+  //     this.path.setAttribute('d', `M ${a.x} ${a.y} L ${b.x} ${b.y}`);
+  //   }
+  // }
+
+  //LINEAS CURVA
+
   update() {
     const a = this.fromBox.getAnchorPos(this.fromAnchor);
     const b = this.toBox.getAnchorPos(this.toAnchor);
     if (a && b) {
-      const offset = Math.abs(b.x - a.x) / 3;
-      const d = `M ${a.x} ${a.y} C ${a.x + offset} ${a.y} ${b.x - offset} ${b.y} ${b.x} ${b.y}`;
-      this.path.setAttribute('d', d);
+        const offset = Math.abs(b.x - a.x) / 2; // distancia de control
+        const d = `M ${a.x} ${a.y} C ${a.x + offset} ${a.y} ${b.x - offset} ${b.y} ${b.x} ${b.y}`;
+        this.path.setAttribute('d', d);
     }
-  }
+}
 
-  serialize() { 
-    return {
-      id: this.id, from: this.fromBox.id, fromAnchor: this.fromAnchor, 
-      to: this.toBox.id, toAnchor: this.toAnchor
-    }; 
-  }
+
+
+
+  serialize() { return {id: this.id, from: this.fromBox.id, fromAnchor: this.fromAnchor, to: this.toBox.id, toAnchor: this.toAnchor}; }
 
   destroy() { this.path.remove(); }
 }
 
+// Qué conexiones salientes están permitidas por tipo
 const rules = {
   trigger: ['questions'],
   questions: ['questions', 'decision', 'end'],
@@ -404,6 +268,7 @@ const rules = {
   end: []
 };
 
+// Restricciones de entradas en una sola línea
 const entradas = {
   trigger: { max: 0, permitidos: {} },
   questions: { max: Infinity, permitidos: { flow: 1, questions: Infinity, trigger: 1 } },
@@ -412,17 +277,12 @@ const entradas = {
   end: { max: Infinity, permitidos: { flow: Infinity, questions: Infinity, decision: Infinity } }
 };
 
+
 class Flowchart {
   constructor() {
-    this.stage = document.getElementById('canvas'); 
-    this.svg = document.getElementById('svg');
-    this.boxes = new Map(); 
-    this.conns = new Map(); 
-    this.boxCounter = 0; 
-    this.connCounter = 0;
-    this.pendingAnchor = null; 
-    this._needsUpdate = false; 
-    this._bindEvents();
+    this.stage = document.getElementById('canvas'); this.svg = document.getElementById('svg');
+    this.boxes = new Map(); this.conns = new Map(); this.boxCounter = 0; this.connCounter = 0;
+    this.pendingAnchor = null; this._needsUpdate = false; this._bindEvents();
   }
 
   _bindEvents() {
@@ -433,16 +293,19 @@ class Flowchart {
     document.getElementById('addEnd').addEventListener('click', () => this.addBox('end'));
     document.getElementById('clearFlow').addEventListener('click', () => this.clear());
 
+    // Click sobre anchors
     this.stage.addEventListener('click', e => {
       const anchor = e.target.closest('.anchor:not(.hidden)');
       if (anchor) {
         const box = this.boxes.get(anchor.dataset.box);
         const pos = anchor.dataset.pos;
 
+        // Si ya hay una conexión entre el pendingAnchor y este anchor, no marcar
         if (this.pendingAnchor) {
           for (const conn of this.conns.values()) {
             if ((conn.fromBox === this.pendingAnchor.box && conn.toBox === box) || 
                 (conn.fromBox === box && conn.toBox === this.pendingAnchor.box)) {
+              console.warn("❌ Ya existe una conexión entre estos nodos.");
               this.pendingAnchor.el.classList.remove('active-anchor');
               this.pendingAnchor = null;
               return;
@@ -450,16 +313,20 @@ class Flowchart {
           }
         }
 
+        // Si hacemos click en el mismo anchor marcado, lo desmarcamos
         if (this.pendingAnchor && this.pendingAnchor.box === box && this.pendingAnchor.pos === pos) {
           this.pendingAnchor.el.classList.remove('active-anchor');
           this.pendingAnchor = null;
           return;
         }
 
+        // Desmarcar anchor previo
         if (this.pendingAnchor && this.pendingAnchor.el) this.pendingAnchor.el.classList.remove('active-anchor');
 
+        // Marcamos el nuevo anchor
         anchor.classList.add('active-anchor');
 
+        // Si ya había un anchor marcado previamente (y es diferente), crear conexión
         if (this.pendingAnchor) {
           this.createConn(this.pendingAnchor.box, this.pendingAnchor.pos, box, pos);
           this.pendingAnchor.el.classList.remove('active-anchor');
@@ -471,6 +338,7 @@ class Flowchart {
         return;
       }
 
+      // Si hacemos click fuera de un anchor, resetear selección
       if (this.pendingAnchor) {
         this.pendingAnchor.el.classList.remove('active-anchor');
         this.pendingAnchor = null;
@@ -480,14 +348,13 @@ class Flowchart {
 
   addBox(type, x=60, y=60) {
     if (type === 'trigger' && Array.from(this.boxes.values()).some(b => b.type === 'trigger')) {
+      console.warn("❌ Solo se permite un nodo Trigger en el flujo.");
       return;
     }
     const id = `b${++this.boxCounter}`;
-    const title = `${type.charAt(0).toUpperCase() + type.slice(1)} ${this.boxCounter}`;
+    const title = `${type.toUpperCase()} ${this.boxCounter}`;
     const box = new Box(this, id, type, x, y, title);
-    this.boxes.set(id, box); 
-    this.updateJSON(); 
-    return box;
+    this.boxes.set(id, box); this.updateJSON(); return box;
   }
 
   hasFlowBetween(fromBox, toBox) {
@@ -505,38 +372,75 @@ class Flowchart {
     }
     return false;
   }
-
   createConn(fromBox, fromAnchor, toBox, toAnchor) {
-    if (fromBox === toBox) return;
-
-    if (!fromBox.isOutputAllowed(fromAnchor) || !toBox.isInputAllowed(toAnchor)) return;
-
-    if (!rules[fromBox.type] || !rules[fromBox.type].includes(toBox.type)) return;
-
-    const reglaEntrada = entradas[toBox.type];
-    if (!reglaEntrada) return;
-
-    const maxPorTipo = reglaEntrada.permitidos[fromBox.type];
-    if (maxPorTipo === undefined) return;
-
-    const count = Array.from(this.conns.values()).filter(c => c.toBox === toBox && c.fromBox.type === fromBox.type).length;
-    if (count >= maxPorTipo) return;
-
-    if (this.hasFlowBetween(fromBox, toBox)) return;
-
-    if (toBox.type === 'end' && this.yaAlcanzaEnd(fromBox, toBox)) return;
-
-    const id = `c${++this.connCounter}`;
-    const conn = new Connector(this, id, fromBox, fromAnchor, toBox, toAnchor);
-    this.conns.set(id, conn);
-    this.requestUpdate();
-    this.updateJSON();
-    return conn;
+  if (fromBox === toBox) {
+    console.warn("❌ No se puede conectar un nodo a sí mismo.");
+    return;
   }
 
-  yaAlcanzaEnd(fromBox, endBox) {
-    return this.hasFlowBetween(fromBox, endBox);
+  // Validar que el anchor sea correcto
+  if (!fromBox.isOutputAllowed(fromAnchor)) {
+    console.warn(`❌ El anchor ${fromAnchor} en ${fromBox.type} no es una salida permitida.`);
+    return;
   }
+  if (!toBox.isInputAllowed(toAnchor)) {
+    console.warn(`❌ El anchor ${toAnchor} en ${toBox.type} no es una entrada permitida.`);
+    return;
+  }
+
+  // 🔹 Validar reglas de salida (qué tipos puede conectar el from)
+  if (!rules[fromBox.type] || !rules[fromBox.type].includes(toBox.type)) {
+    console.warn(`❌ Un nodo de tipo ${fromBox.type} no puede conectar a ${toBox.type}.`);
+    return;
+  }
+
+  // 🔹 Validar reglas de entrada (qué tipos puede recibir el to y cuántos por tipo)
+  const reglaEntrada = entradas[toBox.type];
+  if (!reglaEntrada) {
+    console.warn(`❌ No existen reglas de entrada para ${toBox.type}.`);
+    return;
+  }
+
+  // Verificar si acepta ese tipo de entrada
+  const maxPorTipo = reglaEntrada.permitidos[fromBox.type];
+  if (maxPorTipo === undefined) {
+    console.warn(`❌ ${toBox.type} no acepta entradas desde ${fromBox.type}.`);
+    return;
+  }
+
+  // Contar cuántas conexiones entrantes de este tipo ya existen
+  const count = Array.from(this.conns.values()).filter(c => c.toBox === toBox && c.fromBox.type === fromBox.type).length;
+  if (count >= maxPorTipo) {
+    console.warn(`❌ ${toBox.title} ya tiene el máximo de entradas desde ${fromBox.type} (${maxPorTipo}).`);
+    return;
+  }
+
+  // 🔹 Evitar ciclos y redundancias en cualquier tipo de conexión
+  if (this.hasFlowBetween(fromBox, toBox)) {
+    console.warn(`❌ Ya existe un flujo desde ${fromBox.title} hasta ${toBox.title} (directo o indirecto).`);
+    return;
+  }
+
+  // Restricción especial: evitar duplicar caminos hacia un END
+  if (toBox.type === 'end' && this.yaAlcanzaEnd(fromBox, toBox)) {
+    console.warn(`❌ ${fromBox.title} ya alcanza a ${toBox.title} por otro camino.`);
+    return;
+  }
+
+  // 🔹 Crear conexión
+  const id = `c${++this.connCounter}`;
+  const conn = new Connector(this, id, fromBox, fromAnchor, toBox, toAnchor);
+  this.conns.set(id, conn);
+  this.requestUpdate();
+  this.updateJSON();
+  return conn;
+}
+
+// Verifica si un nodo ya tiene un camino hacia un END
+yaAlcanzaEnd(fromBox, endBox) {
+  return this.hasFlowBetween(fromBox, endBox);
+}
+
 
   requestUpdate() {
     if (this._needsUpdate) return;
