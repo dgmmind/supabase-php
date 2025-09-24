@@ -70,7 +70,6 @@ button:active {
 
 .box { 
   position: absolute; 
-  width: 140px; 
   min-height: 70px; 
   background: #fff;
   border: 1px solid #e0e0e0;
@@ -235,11 +234,44 @@ class Box {
   constructor(flow, id, type, x=60, y=60, title='Nodo') {
     this.flow = flow; this.id = id; this.type = type; this.x = x; this.y = y; 
     this.w = 140; this.h = 70;
-    this.title = title; this.anchors = {}; this.options = type === 'decision' ? [] : null;
+    this.title = title; this.anchors = {};
+    this.options = type === 'decision' ? {} : null;
+    this.steps = (type === 'flow' || type === 'trigger') ? [] : null;
+    if (this.type === 'trigger') {
+      this.triggers = ['hola','hello'];
+    }
+    if (this.type === 'questions') {
+      this.question = '¿Qué bebida desea?';
+      this.key = 'bebida';
+      this.options = {
+        cafe: ['cafe', 'coffee', 'cafes'],
+        latte: ['latte', 'latte coffee'],
+        americano: ['americano', 'american coffee'],
+        cappuccino: ['cappuccino', 'cappucino']
+      };
+    }
     this.el = this._createElement();
     this._enableDrag(); this.updatePosition();
     if (this.type === 'decision') {
-      this.el.querySelector('.add-branch').addEventListener('click', () => this.addBranch());
+      const addBtn = this.el.querySelector('.add-branch');
+      if (addBtn) addBtn.addEventListener('click', () => this.addBranch());
+      this.renderBranches();
+    }
+    if (this.type === 'trigger') {
+      const addBtn = this.el.querySelector('.add-trigger');
+      if (addBtn) addBtn.addEventListener('click', () => this.addTrigger());
+      const titleInput = this.el.querySelector('.trigger-title');
+      if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.flow.updateJSON(); });
+      this.renderTriggers();
+    }
+    if (this.type === 'questions') {
+      const qInput = this.el.querySelector('.question-text');
+      if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
+      const keyInput = this.el.querySelector('.question-key');
+      if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this.flow.updateJSON(); });
+      const addOptBtn = this.el.querySelector('.add-qopt');
+      if (addOptBtn) addOptBtn.addEventListener('click', () => this.addQuestionOptionObject());
+      this.renderQuestionOptionsObject();
     }
     this.addAnchors();
   }
@@ -247,14 +279,46 @@ class Box {
   _createElement() {
     const el = document.createElement('div');
     el.className = `box ${this.type}`; el.dataset.id = this.id;
-    let inner = `
-      <strong>${this.title}</strong>
-      <small>${this.type}</small>
-    `;
+    let inner = ``;
+    if (this.type === 'trigger') {
+      inner += `
+        <div style="margin-bottom:4px">
+          <input class="trigger-title" type="text" value="${this.title}" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        </div>
+        <small>${this.type}</small>
+        <div class="trigger-list" style="margin-top:6px"></div>
+        <button class="add-trigger" style="font-size:10px;padding:4px 8px;margin-top:4px;background:#f8f8f8;color:#666;border:1px solid #e5e5e5">+ Palabra</button>
+      `;
+    } else {
+      inner += `
+        <strong>${this.title}</strong>
+        <small>${this.type}</small>
+      `;
+    }
     if (this.type === 'decision') {
       inner += `
-        <div class="branches"></div>
-        <button class="add-branch">+ Opción</button>
+        <div class="box-field">
+          <label style="font-size:10px;color:#666;display:block;margin-bottom:4px;">Options (flow_id → [keywords])</label>
+          <div class="branches"></div>
+          <button class="add-branch" style="font-size:10px;padding:4px 8px;margin-top:4px;background:#f8f8f8;color:#666;border:1px solid #e5e5e5">+ Opción</button>
+        </div>
+      `;
+    }
+    if (this.type === 'questions') {
+      inner += `
+        <div class="box-field">
+          <label style="font-size:10px;color:#666;display:block;margin-bottom:2px;">Pregunta</label>
+          <input type="text" class="question-text" value="${this.question}" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        </div>
+        <div class="box-field">
+          <label style="font-size:10px;color:#666;display:block;margin-bottom:2px;">Key</label>
+          <input type="text" class="question-key" value="${this.key}" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        </div>
+        <div class="box-field">
+          <label style="font-size:10px;color:#666;display:block;margin-bottom:4px;">Options (key → [keywords])</label>
+          <div class="qopt-list"></div>
+          <button class="add-qopt" style="font-size:10px;padding:4px 8px;margin-top:4px;background:#f8f8f8;color:#666;border:1px solid #e5e5e5">+ Opción</button>
+        </div>
       `;
     }
     el.innerHTML = inner;
@@ -277,18 +341,13 @@ class Box {
 
   addBranch() {
     if (this.type !== 'decision') return;
-    const index = this.options.length;
-    this.options.push(`Opción ${index + 1}`);
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = this.options[index];
-    input.dataset.index = index;
-    input.addEventListener('input', e => {
-      this.options[index] = e.target.value;
-      this.flow.updateJSON();
-    });
-    this.el.querySelector('.branches').appendChild(input);
-    const pos = `out${index}`;
+    let base = 'option';
+    let idx = 1;
+    let k = `${base}${idx}`;
+    while (this.options[k] !== undefined) { idx += 1; k = `${base}${idx}`; }
+    this.options[k] = [''];
+    this.renderBranches();
+    const pos = `out${Object.keys(this.options).length - 1}`;
     this.addAnchor(pos);
     this.repositionOutputs();
     this.h += 25;
@@ -297,14 +356,153 @@ class Box {
     this.flow.updateJSON();
   }
 
+  renderBranches() {
+    if (this.type !== 'decision') return;
+    const container = this.el.querySelector('.branches');
+    if (!container) return;
+    container.innerHTML = '';
+    Object.entries(this.options || {}).forEach(([flowId, keywords], index) => {
+      const row = document.createElement('div');
+      row.style.display = 'grid';
+      row.style.gridTemplateColumns = '1fr 2fr auto';
+      row.style.gap = '4px';
+      row.style.margin = '2px 0';
+      row.dataset.index = index;
+      row.innerHTML = `
+        <input type="text" value="${flowId}" placeholder="flow_id" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        <input type="text" value="${keywords.join(', ')}" placeholder="keywords (comma-separated)" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        <button class="del" style="padding:2px 6px;font-size:10px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca">×</button>
+      `;
+      const [flowIdInput, keywordsInput, delBtn] = row.querySelectorAll('input,button');
+      flowIdInput.addEventListener('blur', e => {
+        const newFlowId = e.target.value;
+        if (newFlowId === flowId || !newFlowId) return;
+        delete this.options[flowId];
+        this.options[newFlowId] = keywordsInput.value.split(',').map(k => k.trim()).filter(k => k);
+        this.renderBranches();
+        this.repositionOutputs();
+        this.flow.requestUpdate();
+        this.flow.updateJSON();
+      });
+      keywordsInput.addEventListener('input', e => {
+        this.options[flowId] = e.target.value.split(',').map(k => k.trim()).filter(k => k);
+        this.flow.updateJSON();
+      });
+      delBtn.addEventListener('click', () => {
+        delete this.options[flowId];
+        this.renderBranches();
+        const pos = `out${index}`;
+        if (this.anchors[pos]) {
+          this.anchors[pos].remove();
+          delete this.anchors[pos];
+        }
+        this.h = 70 + (Object.keys(this.options).length * 25);
+        this.el.style.minHeight = `${this.h}px`;
+        this.repositionOutputs();
+        this.flow.requestUpdate();
+        this.flow.updateJSON();
+      });
+      container.appendChild(row);
+    });
+  }
+
+  renderTriggers() {
+    if (this.type !== 'trigger') return;
+    const container = this.el.querySelector('.trigger-list');
+    if (!container) return;
+    container.innerHTML = '';
+    this.triggers.forEach((word, index) => {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.gap = '4px';
+      row.style.margin = '2px 0';
+      row.innerHTML = `
+        <input type="text" value="${word}" style="flex:1;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        <button data-index="${index}" style="padding:2px 6px;font-size:10px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca">×</button>
+      `;
+      const input = row.querySelector('input');
+      input.addEventListener('input', e => { this.triggers[index] = e.target.value; this.flow.updateJSON(); });
+      const delBtn = row.querySelector('button');
+      delBtn.addEventListener('click', () => { this.removeTrigger(index); });
+      container.appendChild(row);
+    });
+  }
+
+  renderQuestionOptionsObject() {
+    if (this.type !== 'questions') return;
+    const container = this.el.querySelector('.qopt-list');
+    if (!container) return;
+    container.innerHTML = '';
+    Object.entries(this.options || {}).forEach(([key, keywords]) => {
+      const row = document.createElement('div');
+      row.style.display = 'grid';
+      row.style.gridTemplateColumns = '1fr 2fr auto';
+      row.style.gap = '4px';
+      row.style.margin = '2px 0';
+      row.innerHTML = `
+        <input type="text" value="${key}" placeholder="key" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        <input type="text" value="${keywords.join(', ')}" placeholder="keywords (comma-separated)" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
+        <button class="del" style="padding:2px 6px;font-size:10px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca">×</button>
+      `;
+      const [keyInput, keywordsInput, delBtn] = row.querySelectorAll('input,button');
+      keyInput.addEventListener('blur', e => {
+        const newKey = e.target.value;
+        if (newKey === key || !newKey) return;
+        delete this.options[key];
+        this.options[newKey] = keywordsInput.value.split(',').map(k => k.trim()).filter(k => k);
+        this.renderQuestionOptionsObject();
+        this.flow.updateJSON();
+      });
+      keywordsInput.addEventListener('input', e => {
+        this.options[key] = e.target.value.split(',').map(k => k.trim()).filter(k => k);
+        this.flow.updateJSON();
+      });
+      delBtn.addEventListener('click', () => {
+        delete this.options[key];
+        this.renderQuestionOptionsObject();
+        this.flow.updateJSON();
+      });
+      container.appendChild(row);
+    });
+  }
+
+  addQuestionOptionObject() {
+    if (this.type !== 'questions') return;
+    let base = 'option';
+    let idx = 1;
+    let k = `${base}${idx}`;
+    while (this.options[k] !== undefined) { idx += 1; k = `${base}${idx}`; }
+    this.options[k] = [''];
+    this.renderQuestionOptionsObject();
+    this.flow.updateJSON();
+  }
+
+  addTrigger() {
+    if (this.type !== 'trigger') return;
+    this.triggers.push('');
+    this.renderTriggers();
+    this.h += 25;
+    this.el.style.minHeight = `${this.h}px`;
+    this.flow.requestUpdate();
+    this.flow.updateJSON();
+  }
+
+  removeTrigger(index) {
+    if (this.type !== 'trigger') return;
+    this.triggers.splice(index, 1);
+    this.renderTriggers();
+    this.flow.requestUpdate();
+    this.flow.updateJSON();
+  }
+
   repositionOutputs() {
     if (this.type !== 'decision') return;
-    const inputs = this.el.querySelectorAll('.branches input');
-    inputs.forEach((input, i) => {
+    const inputs = this.el.querySelectorAll('.branches div');
+    inputs.forEach((row, i) => {
       const pos = `out${i}`;
       const anchor = this.anchors[pos];
       if (anchor) {
-        const inputRect = input.getBoundingClientRect();
+        const inputRect = row.getBoundingClientRect();
         const containerRect = this.el.getBoundingClientRect();
         const relativeTop = inputRect.top - containerRect.top + inputRect.height / 2;
         anchor.style.right = '-4px';
@@ -359,10 +557,25 @@ class Box {
   }
 
   serialize() { 
-    return {
+    const base = {
       id: this.id, type: this.type, x: this.x, y: this.y,
-      w: this.w, h: this.h, title: this.title, options: this.options
-    }; 
+      w: this.w, h: this.h, title: this.title
+    };
+    if (this.type === 'decision' || this.type === 'questions') {
+      base.options = this.options;
+    }
+    if (this.type === 'trigger') {
+      base.triggers = this.triggers;
+      base.steps = this.steps;
+    }
+    if (this.type === 'questions') {
+      base.question = this.question;
+      base.key = this.key;
+    }
+    if (this.type === 'flow') {
+      base.steps = this.steps;
+    }
+    return base; 
   }
 
   destroy() { this.el.remove(); }
@@ -482,10 +695,14 @@ class Flowchart {
     if (type === 'trigger' && Array.from(this.boxes.values()).some(b => b.type === 'trigger')) {
       return;
     }
-    const id = `b${++this.boxCounter}`;
-    const title = `${type.charAt(0).toUpperCase() + type.slice(1)} ${this.boxCounter}`;
+    const prefixMap = { trigger: 'trigger', questions: 'question', decision: 'decision', flow: 'flow', end: 'end' };
+    const prefix = prefixMap[type] || type;
+    const id = `${prefix}_${Date.now()}`;
+    const title = `${type.charAt(0).toUpperCase() + type.slice(1)} ${this.boxCounter + 1}`;
+ 
     const box = new Box(this, id, type, x, y, title);
     this.boxes.set(id, box); 
+    this.boxCounter++;
     this.updateJSON(); 
     return box;
   }
@@ -529,6 +746,39 @@ class Flowchart {
     const id = `c${++this.connCounter}`;
     const conn = new Connector(this, id, fromBox, fromAnchor, toBox, toAnchor);
     this.conns.set(id, conn);
+
+    if (fromBox.type === 'decision' && toBox.type === 'flow') {
+      const index = parseInt(fromAnchor.replace('out', ''));
+      const currentKeys = Object.keys(fromBox.options);
+      
+      // Sincronizar todas las conexiones salientes
+      const outgoingConns = [...this.conns.values()].filter(c => c.fromBox === fromBox && c.fromAnchor.startsWith('out'));
+      outgoingConns.forEach((conn, idx) => {
+        const connIndex = parseInt(conn.fromAnchor.replace('out', ''));
+        const targetFlowId = conn.toBox.id;
+        const oldKey = currentKeys[connIndex] || `option${connIndex + 1}`;
+        if (oldKey !== targetFlowId) {
+          const keywords = fromBox.options[oldKey] || [''];
+          delete fromBox.options[oldKey];
+          fromBox.options[targetFlowId] = keywords;
+        }
+      });
+
+      fromBox.renderBranches();
+      fromBox.repositionOutputs();
+      this.updateJSON();
+    }
+
+    if (fromBox.type === 'trigger' || fromBox.type === 'flow') {
+      const steps = fromBox.steps;
+      let stepCounter = steps.length > 0 ? steps[steps.length - 1].step + 1 : 1;
+      if (toBox.type === 'decision') {
+        steps.push({ step: stepCounter, ...toBox.serialize() });
+      } else if (toBox.type === 'questions' || toBox.type === 'end') {
+        steps.push({ step: stepCounter, ...toBox.serialize() });
+      }
+    }
+
     this.requestUpdate();
     this.updateJSON();
     return conn;
@@ -552,10 +802,77 @@ class Flowchart {
   }
 
   updateJSON() {
+    // Construir steps para cada nodo trigger y flow
+    const stepsMap = new Map();
+    this.boxes.forEach(box => {
+      if (box.type === 'trigger' || box.type === 'flow') {
+        stepsMap.set(box.id, []);
+      }
+    });
+
+    // Steps para trigger
+    this.boxes.forEach(triggerBox => {
+      if (triggerBox.type !== 'trigger') return;
+      const steps = [];
+      let currentBox = triggerBox;
+      let stepCounter = 1;
+      const visited = new Set();
+
+      while (currentBox) {
+        visited.add(currentBox.id);
+        const nextConn = [...this.conns.values()].find(c => c.fromBox === currentBox && 
+          (c.toBox.type === 'questions' || c.toBox.type === 'decision' || c.toBox.type === 'end'));
+        if (!nextConn) break;
+        const nextBox = nextConn.toBox;
+        steps.push({ step: stepCounter++, ...nextBox.serialize() });
+        if (nextBox.type === 'decision') break; // Terminar en decision
+        currentBox = nextBox;
+      }
+
+      stepsMap.set(triggerBox.id, steps);
+    });
+
+    // Steps para flow
+    this.boxes.forEach(flowBox => {
+      if (flowBox.type !== 'flow') return;
+      const steps = [];
+      let currentBox = flowBox;
+      let stepCounter = 1;
+      const visited = new Set();
+
+      while (currentBox) {
+        visited.add(currentBox.id);
+        const nextConn = [...this.conns.values()].find(c => c.fromBox === currentBox && 
+          (c.toBox.type === 'questions' || c.toBox.type === 'end'));
+        if (!nextConn) break;
+        const nextBox = nextConn.toBox;
+        steps.push({ step: stepCounter++, ...nextBox.serialize() });
+        currentBox = nextBox;
+      }
+
+      stepsMap.set(flowBox.id, steps);
+    });
+
+    // Actualizar steps en cada nodo trigger y flow
+    this.boxes.forEach(box => {
+      if (box.type === 'trigger' || box.type === 'flow') {
+        box.steps = stepsMap.get(box.id) || [];
+      }
+    });
+
+    // Filtrar nodos para boxes (excluir los que están en steps de algún trigger o flow)
+    const allStepIds = new Set();
+    stepsMap.forEach(steps => {
+      steps.forEach(step => allStepIds.add(step.id));
+    });
+
     const data = {
-      boxes: [...this.boxes.values()].map(b => b.serialize()),
+      boxes: [...this.boxes.values()]
+        .filter(b => !allStepIds.has(b.id) || b.type === 'trigger' || b.type === 'flow' || b.type === 'decision')
+        .map(b => b.serialize()),
       conns: [...this.conns.values()].map(c => c.serialize())
     };
+
     document.getElementById('jsonView').textContent = JSON.stringify(data, null, 2);
   }
 
