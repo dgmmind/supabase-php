@@ -79,10 +79,31 @@ button:active {
   font-size: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   transition: box-shadow 0.15s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .box:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.box .header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+.box .body {
+  flex: 1;
+  margin: 8px 0;
+}
+
+.box .footer {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
 }
 
 .box strong {
@@ -180,7 +201,7 @@ pre {
   margin: 8px 0;
 }
 
-.branches input { 
+.branches .branch-input { 
   padding: 4px 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -188,22 +209,182 @@ pre {
   background: #fafafa;
 }
 
-.branches input:focus {
+.branches .branch-input:focus {
   outline: none;
   border-color: #3b82f6;
   background: #fff;
 }
 
 .add-branch {
-  font-size: 10px !important;
-  padding: 4px 8px !important;
+  font-size: 10px;
+  padding: 4px 8px;
   margin-top: 4px;
-  background: #f8f8f8 !important;
-  color: #666 !important;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
 }
 
 .add-branch:hover {
-  background: #eee !important;
+  background: #eee;
+}
+
+.del-box {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.del-box:hover {
+  background: #fecaca;
+}
+
+.key-input {
+  margin-top: 4px;
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.key-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.title-input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.question-text {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.question-text:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.trigger-list .trigger-row {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0;
+}
+
+.trigger-list .trigger-input {
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.trigger-list .trigger-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.trigger-list .del-trigger {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.trigger-list .del-trigger:hover {
+  background: #fecaca;
+}
+
+.qopt-list .qopt-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 4px;
+  margin: 2px 0;
+}
+
+.qopt-list .qopt-input {
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.qopt-list .qopt-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.qopt-list .del-qopt {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.qopt-list .del-qopt:hover {
+  background: #fecaca;
+}
+
+.add-trigger {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.add-trigger:hover {
+  background: #eee;
+}
+
+.add-qopt {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.add-qopt:hover {
+  background: #eee;
 }
 </style>
 </head>
@@ -234,21 +415,26 @@ class Box {
   constructor(flow, id, type, x=60, y=60, title='Nodo') {
     this.flow = flow; this.id = id; this.type = type; this.x = x; this.y = y; 
     this.w = 140; this.h = 70;
-    this.title = title; this.anchors = {};
-    this.options = type === 'decision' ? {} : null;
+    this.title = title; this.key = `${type}_${id.split('_')[1]}`; // Inicializar key
+    this.anchors = {};
+    this.options = (type === 'decision' || type === 'questions') ? [] : null; // Array para decision y questions
     this.steps = (type === 'flow' || type === 'trigger') ? [] : null;
     if (this.type === 'trigger') {
       this.triggers = ['hola','hello'];
     }
+    if (this.type === 'questions' || this.type === 'end') {
+      this.question = '¿Qué desea?';
+    }
     if (this.type === 'questions') {
-      this.question = '¿Qué bebida desea?';
-      this.key = 'bebida';
-      this.options = {
-        cafe: ['cafe', 'coffee', 'cafes'],
-        latte: ['latte', 'latte coffee'],
-        americano: ['americano', 'american coffee'],
-        cappuccino: ['cappuccino', 'cappucino']
-      };
+      this.options = [
+        { key: 'cafe', keywords: ['cafe', 'coffee', 'cafes'] },
+        { key: 'latte', keywords: ['latte', 'latte coffee'] },
+        { key: 'americano', keywords: ['americano', 'american coffee'] },
+        { key: 'cappuccino', keywords: ['cappuccino', 'cappucino'] }
+      ];
+    }
+    if (this.type === 'decision') {
+      this.options = []; // Array de { flowId: string, keywords: array }
     }
     this.el = this._createElement();
     this._enableDrag(); this.updatePosition();
@@ -260,67 +446,92 @@ class Box {
     if (this.type === 'trigger') {
       const addBtn = this.el.querySelector('.add-trigger');
       if (addBtn) addBtn.addEventListener('click', () => this.addTrigger());
-      const titleInput = this.el.querySelector('.trigger-title');
+      const titleInput = this.el.querySelector('.title-input');
       if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.flow.updateJSON(); });
+      const keyInput = this.el.querySelector('.key-input');
+      if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this.flow.updateJSON(); });
       this.renderTriggers();
     }
-    if (this.type === 'questions') {
+    if (this.type === 'questions' || this.type === 'end') {
       const qInput = this.el.querySelector('.question-text');
       if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
-      const keyInput = this.el.querySelector('.question-key');
+      const titleInput = this.el.querySelector('.title-input');
+      if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.flow.updateJSON(); });
+      const keyInput = this.el.querySelector('.key-input');
       if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this.flow.updateJSON(); });
-      const addOptBtn = this.el.querySelector('.add-qopt');
-      if (addOptBtn) addOptBtn.addEventListener('click', () => this.addQuestionOptionObject());
-      this.renderQuestionOptionsObject();
+      if (this.type === 'questions') {
+        const addOptBtn = this.el.querySelector('.add-qopt');
+        if (addOptBtn) addOptBtn.addEventListener('click', () => this.addQuestionOptionObject());
+        this.renderQuestionOptionsObject();
+      }
     }
+    if (this.type === 'decision' || this.type === 'flow') {
+      const titleInput = this.el.querySelector('.title-input');
+      if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.flow.updateJSON(); });
+      const keyInput = this.el.querySelector('.key-input');
+      if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this.flow.updateJSON(); });
+    }
+    const delBoxBtn = this.el.querySelector('.del-box');
+    if (delBoxBtn) delBoxBtn.addEventListener('click', () => this.flow.removeBox(this.id));
     this.addAnchors();
   }
 
   _createElement() {
     const el = document.createElement('div');
     el.className = `box ${this.type}`; el.dataset.id = this.id;
-    let inner = ``;
+    let inner = `
+      <div class="header">
+        <button class="del-box">×</button>
+        <input class="title-input" type="text" value="${this.title}">
+        <input class="key-input" type="text" value="${this.key}" placeholder="Key">
+      </div>
+      <div class="body">
+    `;
     if (this.type === 'trigger') {
       inner += `
-        <div style="margin-bottom:4px">
-          <input class="trigger-title" type="text" value="${this.title}" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        </div>
-        <small>${this.type}</small>
-        <div class="trigger-list" style="margin-top:6px"></div>
-        <button class="add-trigger" style="font-size:10px;padding:4px 8px;margin-top:4px;background:#f8f8f8;color:#666;border:1px solid #e5e5e5">+ Palabra</button>
+        <div class="trigger-list"></div>
       `;
-    } else {
-      inner += `
-        <strong>${this.title}</strong>
-        <small>${this.type}</small>
-      `;
-    }
-    if (this.type === 'decision') {
+    } else if (this.type === 'questions' || this.type === 'end') {
       inner += `
         <div class="box-field">
-          <label style="font-size:10px;color:#666;display:block;margin-bottom:4px;">Options (flow_id → [keywords])</label>
+          <label>Pregunta</label>
+          <input class="question-text" type="text" value="${this.question}">
+        </div>
+      `;
+      if (this.type === 'questions') {
+        inner += `
+          <div class="box-field">
+            <label>Options (key → [keywords])</label>
+            <div class="qopt-list"></div>
+          </div>
+        `;
+      }
+    } else if (this.type === 'decision') {
+      inner += `
+        <div class="box-field">
+          <label>Options (flow_id → [keywords])</label>
           <div class="branches"></div>
-          <button class="add-branch" style="font-size:10px;padding:4px 8px;margin-top:4px;background:#f8f8f8;color:#666;border:1px solid #e5e5e5">+ Opción</button>
         </div>
       `;
     }
-    if (this.type === 'questions') {
+    inner += `</div><div class="footer">`;
+    if (this.type === 'trigger') {
       inner += `
-        <div class="box-field">
-          <label style="font-size:10px;color:#666;display:block;margin-bottom:2px;">Pregunta</label>
-          <input type="text" class="question-text" value="${this.question}" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        </div>
-        <div class="box-field">
-          <label style="font-size:10px;color:#666;display:block;margin-bottom:2px;">Key</label>
-          <input type="text" class="question-key" value="${this.key}" style="width:100%;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        </div>
-        <div class="box-field">
-          <label style="font-size:10px;color:#666;display:block;margin-bottom:4px;">Options (key → [keywords])</label>
-          <div class="qopt-list"></div>
-          <button class="add-qopt" style="font-size:10px;padding:4px 8px;margin-top:4px;background:#f8f8f8;color:#666;border:1px solid #e5e5e5">+ Opción</button>
-        </div>
+        <button class="add-trigger">+ Palabra</button>
+      `;
+    } else if (this.type === 'questions') {
+      inner += `
+        <button class="add-qopt">+ Opción</button>
+      `;
+    } else if (this.type === 'decision') {
+      inner += `
+        <button class="add-branch">+ Opción</button>
       `;
     }
+    inner += `
+      <small>${this.type}</small>
+    </div>
+    `;
     el.innerHTML = inner;
     this.flow.stage.appendChild(el); return el;
   }
@@ -341,14 +552,13 @@ class Box {
 
   addBranch() {
     if (this.type !== 'decision') return;
-    let base = 'option';
-    let idx = 1;
-    let k = `${base}${idx}`;
-    while (this.options[k] !== undefined) { idx += 1; k = `${base}${idx}`; }
-    this.options[k] = [''];
+    let idx = this.options.length + 1;
+    this.options.push({ flowId: `option${idx}`, keywords: [''] });
     this.renderBranches();
-    const pos = `out${Object.keys(this.options).length - 1}`;
-    this.addAnchor(pos);
+    const pos = `out${this.options.length - 1}`;
+    if (!this.anchors[pos]) {
+      this.addAnchor(pos);
+    }
     this.repositionOutputs();
     this.h += 25;
     this.el.style.minHeight = `${this.h}px`;
@@ -361,48 +571,53 @@ class Box {
     const container = this.el.querySelector('.branches');
     if (!container) return;
     container.innerHTML = '';
-    Object.entries(this.options || {}).forEach(([flowId, keywords], index) => {
+    this.options.forEach((opt, index) => {
       const row = document.createElement('div');
-      row.style.display = 'grid';
-      row.style.gridTemplateColumns = '1fr 2fr auto';
-      row.style.gap = '4px';
-      row.style.margin = '2px 0';
+      row.className = 'branch-row';
       row.dataset.index = index;
       row.innerHTML = `
-        <input type="text" value="${flowId}" placeholder="flow_id" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        <input type="text" value="${keywords.join(', ')}" placeholder="keywords (comma-separated)" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        <button class="del" style="padding:2px 6px;font-size:10px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca">×</button>
+        <input class="branch-input" readonly type="text" value="${opt.flowId}" placeholder="flow_id">
+        <input class="branch-input" type="text" value="${opt.keywords.join(', ')}" placeholder="keywords (comma-separated)">
+        <button class="del">×</button>
       `;
       const [flowIdInput, keywordsInput, delBtn] = row.querySelectorAll('input,button');
-      flowIdInput.addEventListener('blur', e => {
-        const newFlowId = e.target.value;
-        if (newFlowId === flowId || !newFlowId) return;
-        delete this.options[flowId];
-        this.options[newFlowId] = keywordsInput.value.split(',').map(k => k.trim()).filter(k => k);
-        this.renderBranches();
-        this.repositionOutputs();
-        this.flow.requestUpdate();
-        this.flow.updateJSON();
-      });
       keywordsInput.addEventListener('input', e => {
-        this.options[flowId] = e.target.value.split(',').map(k => k.trim()).filter(k => k);
+        opt.keywords = e.target.value.split(',').map(k => k.trim()).filter(k => k);
         this.flow.updateJSON();
       });
       delBtn.addEventListener('click', () => {
-        delete this.options[flowId];
-        this.renderBranches();
-        const pos = `out${index}`;
-        if (this.anchors[pos]) {
+        const outgoingConn = [...this.flow.conns.values()].find(c => c.fromBox === this && c.fromAnchor === `out${index}`);
+        if (outgoingConn) {
+          outgoingConn.destroy();
+          this.flow.conns.delete(outgoingConn.id);
+        }
+        this.options.splice(index, 1);
+
+        Object.keys(this.anchors).filter(k => k.startsWith('out')).forEach(pos => {
           this.anchors[pos].remove();
           delete this.anchors[pos];
-        }
-        this.h = 70 + (Object.keys(this.options).length * 25);
+        });
+
+        [...this.flow.conns.values()].filter(c => c.fromBox === this && c.fromAnchor.startsWith('out')).forEach(conn => {
+          let anchorIndex = parseInt(conn.fromAnchor.replace('out', ''));
+          if (anchorIndex > index) {
+            conn.fromAnchor = `out${anchorIndex - 1}`;
+          }
+        });
+
+        this.renderBranches();
+        this.h = 70 + (this.options.length * 25);
         this.el.style.minHeight = `${this.h}px`;
         this.repositionOutputs();
         this.flow.requestUpdate();
         this.flow.updateJSON();
       });
       container.appendChild(row);
+
+      const pos = `out${index}`;
+      if (!this.anchors[pos]) {
+        this.addAnchor(pos);
+      }
     });
   }
 
@@ -413,16 +628,14 @@ class Box {
     container.innerHTML = '';
     this.triggers.forEach((word, index) => {
       const row = document.createElement('div');
-      row.style.display = 'flex';
-      row.style.gap = '4px';
-      row.style.margin = '2px 0';
+      row.className = 'trigger-row';
       row.innerHTML = `
-        <input type="text" value="${word}" style="flex:1;padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        <button data-index="${index}" style="padding:2px 6px;font-size:10px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca">×</button>
+        <input class="trigger-input" type="text" value="${word}">
+        <button class="del-trigger" data-index="${index}">×</button>
       `;
-      const input = row.querySelector('input');
+      const input = row.querySelector('.trigger-input');
       input.addEventListener('input', e => { this.triggers[index] = e.target.value; this.flow.updateJSON(); });
-      const delBtn = row.querySelector('button');
+      const delBtn = row.querySelector('.del-trigger');
       delBtn.addEventListener('click', () => { this.removeTrigger(index); });
       container.appendChild(row);
     });
@@ -433,32 +646,25 @@ class Box {
     const container = this.el.querySelector('.qopt-list');
     if (!container) return;
     container.innerHTML = '';
-    Object.entries(this.options || {}).forEach(([key, keywords]) => {
+    this.options.forEach((opt, index) => {
       const row = document.createElement('div');
-      row.style.display = 'grid';
-      row.style.gridTemplateColumns = '1fr 2fr auto';
-      row.style.gap = '4px';
-      row.style.margin = '2px 0';
+      row.className = 'qopt-row';
       row.innerHTML = `
-        <input type="text" value="${key}" placeholder="key" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        <input type="text" value="${keywords.join(', ')}" placeholder="keywords (comma-separated)" style="padding:4px 6px;border:1px solid #ddd;border-radius:4px;font-size:11px;background:#fafafa"/>
-        <button class="del" style="padding:2px 6px;font-size:10px;background:#fee2e2;color:#dc2626;border:1px solid #fecaca">×</button>
+        <input class="qopt-input" type="text" value="${opt.key}" placeholder="key">
+        <input class="qopt-input" type="text" value="${opt.keywords.join(', ')}" placeholder="keywords (comma-separated)">
+        <button class="del-qopt">×</button>
       `;
-      const [keyInput, keywordsInput, delBtn] = row.querySelectorAll('input,button');
-      keyInput.addEventListener('blur', e => {
-        const newKey = e.target.value;
-        if (newKey === key || !newKey) return;
-        delete this.options[key];
-        this.options[newKey] = keywordsInput.value.split(',').map(k => k.trim()).filter(k => k);
-        this.renderQuestionOptionsObject();
+      const [keyInput, keywordsInput, delBtn] = row.querySelectorAll('.qopt-input, .del-qopt');
+      keyInput.addEventListener('input', e => {
+        opt.key = e.target.value;
         this.flow.updateJSON();
       });
       keywordsInput.addEventListener('input', e => {
-        this.options[key] = e.target.value.split(',').map(k => k.trim()).filter(k => k);
+        opt.keywords = e.target.value.split(',').map(k => k.trim()).filter(k => k);
         this.flow.updateJSON();
       });
       delBtn.addEventListener('click', () => {
-        delete this.options[key];
+        this.options.splice(index, 1);
         this.renderQuestionOptionsObject();
         this.flow.updateJSON();
       });
@@ -469,10 +675,8 @@ class Box {
   addQuestionOptionObject() {
     if (this.type !== 'questions') return;
     let base = 'option';
-    let idx = 1;
-    let k = `${base}${idx}`;
-    while (this.options[k] !== undefined) { idx += 1; k = `${base}${idx}`; }
-    this.options[k] = [''];
+    let idx = this.options.length + 1;
+    this.options.push({ key: `${base}${idx}`, keywords: [''] });
     this.renderQuestionOptionsObject();
     this.flow.updateJSON();
   }
@@ -497,7 +701,7 @@ class Box {
 
   repositionOutputs() {
     if (this.type !== 'decision') return;
-    const inputs = this.el.querySelectorAll('.branches div');
+    const inputs = this.el.querySelectorAll('.branch-row');
     inputs.forEach((row, i) => {
       const pos = `out${i}`;
       const anchor = this.anchors[pos];
@@ -559,18 +763,20 @@ class Box {
   serialize() { 
     const base = {
       id: this.id, type: this.type, x: this.x, y: this.y,
-      w: this.w, h: this.h, title: this.title
+      w: this.w, h: this.h, title: this.title, key: this.key
     };
     if (this.type === 'decision' || this.type === 'questions') {
-      base.options = this.options;
+      base.options = this.options.reduce((acc, opt) => {
+        acc[this.type === 'decision' ? opt.flowId : opt.key] = opt.keywords;
+        return acc;
+      }, {});
     }
     if (this.type === 'trigger') {
       base.triggers = this.triggers;
       base.steps = this.steps;
     }
-    if (this.type === 'questions') {
+    if (this.type === 'questions' || this.type === 'end') {
       base.question = this.question;
-      base.key = this.key;
     }
     if (this.type === 'flow') {
       base.steps = this.steps;
@@ -707,6 +913,30 @@ class Flowchart {
     return box;
   }
 
+  removeBox(id) {
+    const box = this.boxes.get(id);
+    if (!box) return;
+
+    [...this.conns.values()].forEach(conn => {
+      if (conn.fromBox === box || conn.toBox === box) {
+        conn.destroy();
+        this.conns.delete(conn.id);
+        if (conn.fromBox.type === 'decision' && conn.toBox === box) {
+          const index = parseInt(conn.fromAnchor.replace('out', ''));
+          if (conn.fromBox.options[index] && conn.fromBox.options[index].flowId === box.id) {
+            conn.fromBox.options[index].flowId = `option${index + 1}`;
+            conn.fromBox.renderBranches();
+          }
+        }
+      }
+    });
+
+    box.destroy();
+    this.boxes.delete(id);
+    this.requestUpdate();
+    this.updateJSON();
+  }
+
   hasFlowBetween(fromBox, toBox) {
     const visited = new Set();
     const stack = [fromBox];
@@ -749,24 +979,12 @@ class Flowchart {
 
     if (fromBox.type === 'decision' && toBox.type === 'flow') {
       const index = parseInt(fromAnchor.replace('out', ''));
-      const currentKeys = Object.keys(fromBox.options);
-      
-      // Sincronizar todas las conexiones salientes
-      const outgoingConns = [...this.conns.values()].filter(c => c.fromBox === fromBox && c.fromAnchor.startsWith('out'));
-      outgoingConns.forEach((conn, idx) => {
-        const connIndex = parseInt(conn.fromAnchor.replace('out', ''));
-        const targetFlowId = conn.toBox.id;
-        const oldKey = currentKeys[connIndex] || `option${connIndex + 1}`;
-        if (oldKey !== targetFlowId) {
-          const keywords = fromBox.options[oldKey] || [''];
-          delete fromBox.options[oldKey];
-          fromBox.options[targetFlowId] = keywords;
-        }
-      });
-
-      fromBox.renderBranches();
-      fromBox.repositionOutputs();
-      this.updateJSON();
+      if (fromBox.options[index]) {
+        fromBox.options[index].flowId = toBox.id;
+        fromBox.renderBranches();
+        fromBox.repositionOutputs();
+        this.updateJSON();
+      }
     }
 
     if (fromBox.type === 'trigger' || fromBox.type === 'flow') {
@@ -802,7 +1020,6 @@ class Flowchart {
   }
 
   updateJSON() {
-    // Construir steps para cada nodo trigger y flow
     const stepsMap = new Map();
     this.boxes.forEach(box => {
       if (box.type === 'trigger' || box.type === 'flow') {
@@ -810,7 +1027,6 @@ class Flowchart {
       }
     });
 
-    // Steps para trigger
     this.boxes.forEach(triggerBox => {
       if (triggerBox.type !== 'trigger') return;
       const steps = [];
@@ -825,14 +1041,13 @@ class Flowchart {
         if (!nextConn) break;
         const nextBox = nextConn.toBox;
         steps.push({ step: stepCounter++, ...nextBox.serialize() });
-        if (nextBox.type === 'decision') break; // Terminar en decision
+        if (nextBox.type === 'decision') break;
         currentBox = nextBox;
       }
 
       stepsMap.set(triggerBox.id, steps);
     });
 
-    // Steps para flow
     this.boxes.forEach(flowBox => {
       if (flowBox.type !== 'flow') return;
       const steps = [];
@@ -853,14 +1068,12 @@ class Flowchart {
       stepsMap.set(flowBox.id, steps);
     });
 
-    // Actualizar steps en cada nodo trigger y flow
     this.boxes.forEach(box => {
       if (box.type === 'trigger' || box.type === 'flow') {
         box.steps = stepsMap.get(box.id) || [];
       }
     });
 
-    // Filtrar nodos para boxes (excluir los que están en steps de algún trigger o flow)
     const allStepIds = new Set();
     stepsMap.forEach(steps => {
       steps.forEach(step => allStepIds.add(step.id));
@@ -885,9 +1098,425 @@ class Flowchart {
     this.connCounter = 0;
     this.updateJSON();
   }
+
+  loadJSON(jsonData) {
+  // Limpiar el estado actual
+  this.clear();
+
+  // Primero cargar todos los nodos de boxes, incluyendo los de steps
+  const allBoxes = new Map();
+  jsonData.boxes.forEach(boxData => {
+    const box = new Box(this, boxData.id, boxData.type, boxData.x, boxData.y, boxData.title);
+    box.w = boxData.w;
+    box.h = boxData.h;
+    box.key = boxData.key;
+
+    if (box.type === 'trigger') {
+      box.triggers = boxData.triggers || [];
+      box.steps = boxData.steps || [];
+    }
+    if (box.type === 'questions' || box.type === 'end') {
+      box.question = boxData.question || '';
+    }
+    if (box.type === 'decision' || box.type === 'questions') {
+      box.options = Object.entries(boxData.options || {}).map(([key, keywords]) => {
+        return box.type === 'decision' ? { flowId: key, keywords } : { key, keywords };
+      });
+    }
+    if (box.type === 'flow') {
+      box.steps = boxData.steps || [];
+    }
+
+    // Renderizar contenido específico según el tipo
+    if (box.type === 'decision') box.renderBranches();
+    if (box.type === 'trigger') box.renderTriggers();
+    if (box.type === 'questions') box.renderQuestionOptionsObject();
+
+    allBoxes.set(box.id, box);
+    this.boxes.set(box.id, box);
+    this.boxCounter = Math.max(this.boxCounter, parseInt(box.id.split('_')[1]) || 0);
+  });
+
+  // Procesar steps anidados para crear nodos adicionales
+  jsonData.boxes.forEach(boxData => {
+    if (boxData.steps && (boxData.type === 'trigger' || boxData.type === 'flow')) {
+      boxData.steps.forEach(step => {
+        if (!allBoxes.has(step.id)) {
+          const stepBox = new Box(this, step.id, step.type, step.x, step.y, step.title);
+          stepBox.w = step.w;
+          stepBox.h = step.h;
+          stepBox.key = step.key;
+          if (step.type === 'questions' || step.type === 'end') {
+            stepBox.question = step.question || '';
+          }
+          if (step.type === 'decision' || step.type === 'questions') {
+            stepBox.options = Object.entries(step.options || {}).map(([key, keywords]) => {
+              return step.type === 'decision' ? { flowId: key, keywords } : { key, keywords };
+            });
+          }
+          if (step.type === 'decision') stepBox.renderBranches();
+          if (step.type === 'questions') stepBox.renderQuestionOptionsObject();
+          allBoxes.set(step.id, stepBox);
+          this.boxes.set(step.id, stepBox);
+          this.boxCounter = Math.max(this.boxCounter, parseInt(step.id.split('_')[1]) || 0);
+        }
+      });
+    }
+  });
+
+  // Cargar las conexiones explícitas
+  jsonData.conns.forEach(connData => {
+    const fromBox = this.boxes.get(connData.from);
+    const toBox = this.boxes.get(connData.to);
+    if (fromBox && toBox) {
+      const conn = new Connector(this, connData.id, fromBox, connData.fromAnchor, toBox, connData.toAnchor);
+      this.conns.set(conn.id, conn);
+      this.connCounter = Math.max(this.connCounter, parseInt(conn.id.replace('c', '')) || 0);
+    }
+  });
+
+  // Generar conexiones automáticas a partir de steps en trigger y flow
+  jsonData.boxes.forEach(boxData => {
+    if (boxData.steps && (boxData.type === 'trigger' || boxData.type === 'flow')) {
+      const parentBox = this.boxes.get(boxData.id);
+      if (boxData.steps.length > 0) {
+        // Conectar el nodo padre (trigger o flow) con su primer step
+        const firstStep = this.boxes.get(boxData.steps[0].id);
+        if (parentBox && firstStep && !this.conns.has(`c${this.connCounter + 1}`)) {
+          const connId = `c${++this.connCounter}`;
+          const conn = new Connector(this, connId, parentBox, 'right', firstStep, 'left');
+          this.conns.set(connId, conn);
+        }
+
+        // Conectar los steps consecutivos
+        boxData.steps.forEach((step, index) => {
+          const currentBox = this.boxes.get(step.id);
+          if (index < boxData.steps.length - 1) {
+            const nextStep = boxData.steps[index + 1];
+            const nextBox = this.boxes.get(nextStep.id);
+            if (currentBox && nextBox && !this.conns.has(`c${this.connCounter + 1}`)) {
+              const connId = `c${++this.connCounter}`;
+              const conn = new Connector(this, connId, currentBox, 'right', nextBox, 'left');
+              this.conns.set(connId, conn);
+            }
+          }
+        });
+      }
+    }
+  });
+
+  // Actualizar el JSON y renderizar
+  this.requestUpdate();
+  this.updateJSON();
 }
+}
+const sampleJSON = {
+  "boxes": [
+    {
+      "id": "trigger_1",
+      "type": "trigger",
+      "x": 60,
+      "y": 60,
+      "w": 140,
+      "h": 70,
+      "title": "Trigger Inicio",
+      "key": "trigger_1",
+      "triggers": ["hola", "buenas"],
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_name",
+          "type": "questions",
+          "x": 300,
+          "y": 60,
+          "w": 180,
+          "h": 70,
+          "title": "Pregunta Nombre",
+          "key": "question_name",
+          "question": "¿Cuál es tu nombre?"
+        },
+        {
+          "step": 2,
+          "id": "question_menu",
+          "type": "questions",
+          "x": 600,
+          "y": 60,
+          "w": 200,
+          "h": 70,
+          "title": "Pregunta Menú",
+          "key": "question_menu",
+          "question": "Ok {nombre}, tenemos Pizza, Hamburguesa, Sopas y Tacos. ¿Qué deseas?",
+          "options": {
+            "pizza": ["pizza", "pizzas"],
+            "hamburguesa": ["hamburguesa", "burger"],
+            "sopa": ["sopa", "sopas"],
+            "tacos": ["taco", "tacos"]
+          }
+        },
+        {
+          "step": 3,
+          "id": "decision_menu",
+          "type": "decision",
+          "x": 950,
+          "y": 60,
+          "w": 180,
+          "h": 200,
+          "title": "Decision Menú",
+          "key": "decision_menu",
+          "options": {
+            "flow_pizza": ["pizza"],
+            "flow_hamburguesa": ["hamburguesa"],
+            "flow_sopa": ["sopa"],
+            "flow_tacos": ["tacos"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "flow_pizza",
+      "type": "flow",
+      "x": 1300,
+      "y": 40,
+      "w": 160,
+      "h": 70,
+      "title": "Flow Pizza",
+      "key": "flow_pizza",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_pizza_size",
+          "type": "questions",
+          "x": 1550,
+          "y": 40,
+          "w": 200,
+          "h": 70,
+          "title": "Tamaño Pizza",
+          "key": "question_pizza_size",
+          "question": "¿Qué tamaño de pizza deseas?",
+          "options": {
+            "pequeña": ["pequeña", "chica"],
+            "mediana": ["mediana"],
+            "grande": ["grande"]
+          }
+        },
+        {
+          "step": 2,
+          "id": "question_pizza_type",
+          "type": "questions",
+          "x": 1850,
+          "y": 40,
+          "w": 200,
+          "h": 70,
+          "title": "Tipo Pizza",
+          "key": "question_pizza_type",
+          "question": "¿Qué tipo de pizza deseas?",
+          "options": {
+            "hawaiana": ["hawaiana"],
+            "pepperoni": ["pepperoni"],
+            "queso": ["queso", "margarita"]
+          }
+        },
+        {
+          "step": 3,
+          "id": "end_pizza",
+          "type": "end",
+          "x": 2150,
+          "y": 40,
+          "w": 140,
+          "h": 70,
+          "title": "Fin Pizza",
+          "key": "end_pizza",
+          "question": "¡Perfecto! Tu pizza está en preparación 🍕"
+        }
+      ]
+    },
+    {
+      "id": "flow_hamburguesa",
+      "type": "flow",
+      "x": 1300,
+      "y": 200,
+      "w": 180,
+      "h": 70,
+      "title": "Flow Hamburguesa",
+      "key": "flow_hamburguesa",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_burger_type",
+          "type": "questions",
+          "x": 1550,
+          "y": 200,
+          "w": 220,
+          "h": 70,
+          "title": "Tipo Hamburguesa",
+          "key": "question_burger_type",
+          "question": "¿Qué tipo de hamburguesa deseas?",
+          "options": {
+            "clasica": ["clásica", "sencilla"],
+            "doble": ["doble", "extra carne"],
+            "pollo": ["pollo"]
+          }
+        },
+        {
+          "step": 2,
+          "id": "question_burger_side",
+          "type": "questions",
+          "x": 1850,
+          "y": 200,
+          "w": 220,
+          "h": 70,
+          "title": "Acompañamiento",
+          "key": "question_burger_side",
+          "question": "¿Quieres papas fritas o ensalada como acompañamiento?",
+          "options": {
+            "papas": ["papas", "fritas"],
+            "ensalada": ["ensalada"],
+            "ninguno": ["ninguno", "no"]
+          }
+        },
+        {
+          "step": 3,
+          "id": "end_hamburguesa",
+          "type": "end",
+          "x": 2150,
+          "y": 200,
+          "w": 200,
+          "h": 70,
+          "title": "Fin Hamburguesa",
+          "key": "end_hamburguesa",
+          "question": "¡Excelente! Tu hamburguesa estará lista 🍔"
+        }
+      ]
+    },
+    {
+      "id": "flow_sopa",
+      "type": "flow",
+      "x": 1300,
+      "y": 360,
+      "w": 160,
+      "h": 70,
+      "title": "Flow Sopas",
+      "key": "flow_sopa",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_soup_type",
+          "type": "questions",
+          "x": 1550,
+          "y": 360,
+          "w": 220,
+          "h": 70,
+          "title": "Tipo Sopa",
+          "key": "question_soup_type",
+          "question": "¿Qué tipo de sopa deseas?",
+          "options": {
+            "pollo": ["pollo"],
+            "res": ["res", "carne"],
+            "vegetales": ["vegetales", "verduras"]
+          }
+        },
+        {
+          "step": 2,
+          "id": "question_soup_size",
+          "type": "questions",
+          "x": 1850,
+          "y": 360,
+          "w": 220,
+          "h": 70,
+          "title": "Tamaño Sopa",
+          "key": "question_soup_size",
+          "question": "¿Qué tamaño deseas?",
+          "options": {
+            "pequeña": ["pequeña", "chica"],
+            "grande": ["grande"]
+          }
+        },
+        {
+          "step": 3,
+          "id": "end_sopa",
+          "type": "end",
+          "x": 2150,
+          "y": 360,
+          "w": 200,
+          "h": 70,
+          "title": "Fin Sopa",
+          "key": "end_sopa",
+          "question": "¡Genial! Tu sopa estará lista 🍲"
+        }
+      ]
+    },
+    {
+      "id": "flow_tacos",
+      "type": "flow",
+      "x": 1300,
+      "y": 520,
+      "w": 160,
+      "h": 70,
+      "title": "Flow Tacos",
+      "key": "flow_tacos",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_taco_type",
+          "type": "questions",
+          "x": 1550,
+          "y": 520,
+          "w": 220,
+          "h": 70,
+          "title": "Tipo Taco",
+          "key": "question_taco_type",
+          "question": "¿Qué tipo de tacos deseas?",
+          "options": {
+            "pastor": ["al pastor"],
+            "pollo": ["pollo"],
+            "res": ["res", "carne"]
+          }
+        },
+        {
+          "step": 2,
+          "id": "question_taco_quantity",
+          "type": "questions",
+          "x": 1850,
+          "y": 520,
+          "w": 220,
+          "h": 70,
+          "title": "Cantidad Tacos",
+          "key": "question_taco_quantity",
+          "question": "¿Cuántos tacos quieres?",
+          "options": {
+            "2": ["2", "dos"],
+            "3": ["3", "tres"],
+            "5": ["5", "cinco"]
+          }
+        },
+        {
+          "step": 3,
+          "id": "end_tacos",
+          "type": "end",
+          "x": 2150,
+          "y": 520,
+          "w": 200,
+          "h": 70,
+          "title": "Fin Tacos",
+          "key": "end_tacos",
+          "question": "¡Listo! Tus tacos estarán en camino 🌮"
+        }
+      ]
+    }
+  ],
+  "conns": [
+    { "id": "c1", "from": "trigger_1", "fromAnchor": "right", "to": "question_name", "toAnchor": "left" },
+    { "id": "c2", "from": "question_name", "fromAnchor": "right", "to": "question_menu", "toAnchor": "left" },
+    { "id": "c3", "from": "question_menu", "fromAnchor": "right", "to": "decision_menu", "toAnchor": "left" },
+    { "id": "c4", "from": "decision_menu", "fromAnchor": "out0", "to": "flow_pizza", "toAnchor": "left" },
+    { "id": "c5", "from": "decision_menu", "fromAnchor": "out1", "to": "flow_hamburguesa", "toAnchor": "left" },
+    { "id": "c6", "from": "decision_menu", "fromAnchor": "out2", "to": "flow_sopa", "toAnchor": "left" },
+    { "id": "c7", "from": "decision_menu", "fromAnchor": "out3", "to": "flow_tacos", "toAnchor": "left" }
+  ]
+};
 
 const FLOW = new Flowchart();
+FLOW.loadJSON(sampleJSON);
 </script>
 </body>
 </html>
