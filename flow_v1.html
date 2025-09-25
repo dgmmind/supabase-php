@@ -23,23 +23,7 @@ body {
   flex-direction: column;
   gap: 12px;
 }
-.edit-panel {
-  width: 300px;
-  padding: 20px;
-  background: #fff;
-  border-left: 1px solid #e5e5e5;
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-}
-.edit-panel.open {
-  transform: translateX(0);
-}
-.sidebar h3, .edit-panel h3 {
+.sidebar h3 {
   margin: 0 0 16px 0;
   font-size: 18px;
   font-weight: 600;
@@ -108,7 +92,6 @@ button:active {
 .box .body {
   flex: 1;
   margin: 8px 0;
-  text-align: center;
 }
 .box .footer {
   display: flex;
@@ -191,51 +174,44 @@ pre {
   color: #555;
 }
 .anchor.hidden { display: none; }
-.edit-button {
-  padding: 4px 8px;
-  font-size: 10px;
-  background: #f8f8f8;
-  color: #666;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.edit-button:hover {
-  background: #eee;
-}
-.box-field {
-  margin-bottom: 10px;
-}
-.box-field label {
-  display: block;
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 4px;
-}
-.branch-row, .qopt-row, .trigger-row, .file-row {
+.branches {
   display: flex;
+  flex-direction: column;
   gap: 4px;
-  margin: 2px 0;
-  align-items: center;
+  margin: 8px 0;
 }
-.branch-input, .qopt-input, .trigger-input, .key-input, .title-input, .question-text {
+.branches .branch-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 4px;
+}
+.branches .branch-input {
   padding: 4px 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 11px;
   background: #fafafa;
-  flex: 1;
 }
-.branch-input:focus, .qopt-input:focus, .trigger-input:focus, .key-input:focus, .title-input:focus, .question-text:focus {
+.branches .branch-input:focus {
   outline: none;
   border-color: #3b82f6;
   background: #fff;
 }
-.branch-input.invalid, .qopt-input.invalid, .key-input.invalid {
-  border-color: #ef4444;
-  background: #fef2f2;
+.add-branch {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
 }
-.del, .del-trigger, .del-qopt, .del-file {
+.add-branch:hover {
+  background: #eee;
+}
+.del-box {
+  position: absolute;
+  top: 4px;
+  right: 4px;
   padding: 2px 6px;
   font-size: 10px;
   background: #fee2e2;
@@ -244,10 +220,118 @@ pre {
   border-radius: 4px;
   cursor: pointer;
 }
-.del:hover, .del-trigger:hover, .del-qopt:hover, .del-file:hover {
+.del-box:hover {
   background: #fecaca;
 }
-.add-branch, .add-qopt, .add-trigger, .add-file {
+.key-input {
+  margin-top: 4px;
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+.key-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+.key-input.invalid {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+.title-input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+.title-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+.question-text {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+.question-text:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+.trigger-list .trigger-row {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0;
+}
+.trigger-list .trigger-input {
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+.trigger-list .trigger-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+.trigger-list .del-trigger {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.trigger-list .del-trigger:hover {
+  background: #fecaca;
+}
+.qopt-list .qopt-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 4px;
+  margin: 2px 0;
+}
+.qopt-list .qopt-input {
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+.qopt-list .qopt-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+.qopt-list .qopt-input.invalid {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+.qopt-list .del-qopt {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.qopt-list .del-qopt:hover {
+  background: #fecaca;
+}
+.add-trigger {
   font-size: 10px;
   padding: 4px 8px;
   margin-top: 4px;
@@ -255,13 +339,53 @@ pre {
   color: #666;
   border: 1px solid #e5e5e5;
 }
-.add-branch:hover, .add-qopt:hover, .add-trigger:hover, .add-file:hover {
+.add-trigger:hover {
   background: #eee;
 }
-.file-name {
+.add-qopt {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+.add-qopt:hover {
+  background: #eee;
+}
+.file-list .file-row {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0;
+  align-items: center;
+}
+.file-list .file-name {
   flex: 1;
   font-size: 11px;
   color: #333;
+}
+.file-list .del-file {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.file-list .del-file:hover {
+  background: #fecaca;
+}
+.add-file {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+.add-file:hover {
+  background: #eee;
 }
 </style>
 </head>
@@ -286,10 +410,6 @@ pre {
     <svg id="svg" width="3000" height="3000" style="position:absolute;left:0;top:0;pointer-events:none"></svg>
   </div>
 </div>
-<div class="edit-panel" id="editPanel">
-  <h3>Edición</h3>
-  <div id="editContent"></div>
-</div>
 <input type="file" id="fileInput" style="display:none" accept=".json">
 <script>
 // Core: Base Classes and Common Logic
@@ -305,21 +425,22 @@ class BaseBox {
     this.title = title;
     this.key = key;
     this.anchors = {};
-    this.isEditing = false;
   }
   initElement() {
     this.el = this._createElement();
     this._enableDrag();
     this.updatePosition();
     this._validateKey();
+    const titleInput = this.el.querySelector('.title-input');
+    if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.flow.updateJSON(); });
+    const keyInput = this.el.querySelector('.key-input');
+    if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this._validateKey(); this.flow.updateJSON(); });
     const delBoxBtn = this.el.querySelector('.del-box');
     if (delBoxBtn) delBoxBtn.addEventListener('click', () => this.flow.removeBox(this.id));
     this.addAnchors();
-    const editBtn = this.el.querySelector('.edit-button');
-    if (editBtn) editBtn.addEventListener('click', () => this.toggleEditPanel());
   }
   _validateKey() {
-    const keyInput = document.querySelector(`#editContent .key-input[data-box="${this.id}"]`);
+    const keyInput = this.el.querySelector('.key-input');
     if (!keyInput) return;
     const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
     keyInput.classList.toggle('invalid', isDuplicate);
@@ -329,8 +450,8 @@ class BaseBox {
     return `
       <div class="header">
         <button class="del-box">×</button>
-        <strong>${this.title}</strong>
-        <small>${this.key}</small>
+        <input class="title-input" type="text" value="${this.title}">
+        <input class="key-input" type="text" value="${this.key}" placeholder="Key">
       </div>
     `;
   }
@@ -406,38 +527,6 @@ class BaseBox {
   updatePosition() {
     this.el.style.transform = `translate(${this.x}px, ${this.y}px)`;
   }
-  toggleEditPanel() {
-    const panel = document.getElementById('editPanel');
-    const content = document.getElementById('editContent');
-    if (this.isEditing) {
-      panel.classList.remove('open');
-      content.innerHTML = '';
-      this.isEditing = false;
-    } else {
-      content.innerHTML = this.getEditContent();
-      panel.classList.add('open');
-      this.isEditing = true;
-      this._bindEditEvents();
-    }
-  }
-  getEditContent() {
-    return `
-      <div class="box-field">
-        <label>Título</label>
-        <input class="title-input" type="text" value="${this.title}" data-box="${this.id}">
-      </div>
-      <div class="box-field">
-        <label>Clave</label>
-        <input class="key-input" type="text" value="${this.key}" data-box="${this.id}">
-      </div>
-    `;
-  }
-  _bindEditEvents() {
-    const titleInput = document.querySelector(`#editContent .title-input[data-box="${this.id}"]`);
-    if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.el.querySelector('strong').textContent = this.title; this.flow.updateJSON(); });
-    const keyInput = document.querySelector(`#editContent .key-input[data-box="${this.id}"]`);
-    if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this.el.querySelector('small').textContent = this.key; this._validateKey(); this.flow.updateJSON(); });
-  }
   serialize() {
     return {
       id: this.id,
@@ -452,11 +541,6 @@ class BaseBox {
   }
   destroy() {
     this.el.remove();
-    if (this.isEditing) {
-      const panel = document.getElementById('editPanel');
-      panel.classList.remove('open');
-      document.getElementById('editContent').innerHTML = '';
-    }
   }
 }
 // Node-Specific Classes
@@ -466,44 +550,36 @@ class TriggerBox extends BaseBox {
     this.triggers = ['hola', 'hello'];
     this.steps = [];
     this.initElement();
+    this.renderTriggers();
+    const addBtn = this.el.querySelector('.add-trigger');
+    if (addBtn) addBtn.addEventListener('click', () => this.addTrigger());
   }
   _createBody() {
-    return '<div class="body"></div>';
-  }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
-  }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Palabras</label>
+    return `
+      <div class="body">
         <div class="trigger-list"></div>
       </div>
-      <div class="box-field">
+    `;
+  }
+  _createFooter() {
+    return `
+      <div class="footer">
         <button class="add-trigger">+ Palabra</button>
+        <small>${this.type}</small>
       </div>
     `;
-    return content;
-  }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const addBtn = document.querySelector(`#editContent .add-trigger`);
-    if (addBtn) addBtn.addEventListener('click', () => this.addTrigger());
-    this.renderTriggers();
   }
   renderTriggers() {
-    const container = document.querySelector(`#editContent .trigger-list`);
+    const container = this.el.querySelector('.trigger-list');
     if (!container) return;
     container.innerHTML = '';
     this.triggers.forEach((word, index) => {
       const row = document.createElement('div');
       row.className = 'trigger-row';
       row.innerHTML = `
-        <input class="trigger-input" type="text" value="${word}" data-index="${index}">
-        <button class="del-trigger">×</button>
+        <input class="trigger-input" type="text" value="${word}">
+        <button class="del-trigger" data-index="${index}">×</button>
       `;
-      container.appendChild(row);
       const input = row.querySelector('.trigger-input');
       input.addEventListener('input', e => {
         this.triggers[index] = e.target.value;
@@ -511,6 +587,7 @@ class TriggerBox extends BaseBox {
       });
       const delBtn = row.querySelector('.del-trigger');
       delBtn.addEventListener('click', () => this.removeTrigger(index));
+      container.appendChild(row);
     });
   }
   addTrigger() {
@@ -548,61 +625,54 @@ class QuestionsBox extends BaseBox {
     ];
     this.files = [];
     this.initElement();
-  }
-  _createBody() {
-    return '<div class="body"></div>';
-  }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
-  }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Pregunta</label>
-        <input class="question-text" type="text" value="${this.question}" data-box="${this.id}">
-      </div>
-      <div class="box-field">
-        <label>Options (key → [keywords])</label>
-        <div class="qopt-list"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-qopt">+ Opción</button>
-      </div>
-      <div class="box-field">
-        <label>Archivos</label>
-        <div class="file-list"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-file">+ Archivo</button>
-      </div>
-    `;
-    return content;
-  }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const qInput = document.querySelector(`#editContent .question-text[data-box="${this.id}"]`);
+    const qInput = this.el.querySelector('.question-text');
     if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
-    const addOptBtn = document.querySelector(`#editContent .add-qopt`);
+    const addOptBtn = this.el.querySelector('.add-qopt');
     if (addOptBtn) addOptBtn.addEventListener('click', () => this.addQuestionOptionObject());
-    const addFileBtn = document.querySelector(`#editContent .add-file`);
+    const addFileBtn = this.el.querySelector('.add-file');
     if (addFileBtn) addFileBtn.addEventListener('click', () => this.addFile());
     this.renderQuestionOptionsObject();
     this.renderFiles();
   }
+  _createBody() {
+    return `
+      <div class="body">
+        <div class="box-field">
+          <label>Pregunta</label>
+          <input class="question-text" type="text" value="${this.question}">
+        </div>
+        <div class="box-field">
+          <label>Options (key → [keywords])</label>
+          <div class="qopt-list"></div>
+        </div>
+        <div class="box-field">
+          <label>Archivos</label>
+          <div class="file-list"></div>
+        </div>
+      </div>
+    `;
+  }
+  _createFooter() {
+    return `
+      <div class="footer">
+        <button class="add-qopt">+ Opción</button>
+        <button class="add-file">+ Archivo</button>
+        <small>${this.type}</small>
+      </div>
+    `;
+  }
   renderQuestionOptionsObject() {
-    const container = document.querySelector(`#editContent .qopt-list`);
+    const container = this.el.querySelector('.qopt-list');
     if (!container) return;
     container.innerHTML = '';
     this.options.forEach((opt, index) => {
       const row = document.createElement('div');
       row.className = 'qopt-row';
       row.innerHTML = `
-        <input class="qopt-input" type="text" value="${opt.key}" data-index="${index}">
-        <input class="qopt-input" type="text" value="${opt.keywords.join(', ')}" data-index="${index}">
+        <input class="qopt-input" type="text" value="${opt.key}" placeholder="key">
+        <input class="qopt-input" type="text" value="${opt.keywords.join(', ')}" placeholder="keywords (comma-separated)">
         <button class="del-qopt">×</button>
       `;
-      container.appendChild(row);
       const [keyInput, keywordsInput, delBtn] = row.querySelectorAll('.qopt-input, .del-qopt');
       keyInput.addEventListener('input', e => {
         const oldKey = opt.key;
@@ -623,6 +693,7 @@ class QuestionsBox extends BaseBox {
         this.renderQuestionOptionsObject();
         this.flow.updateJSON();
       });
+      container.appendChild(row);
     });
   }
   addQuestionOptionObject() {
@@ -633,7 +704,7 @@ class QuestionsBox extends BaseBox {
     this.flow.updateJSON();
   }
   renderFiles() {
-    const container = document.querySelector(`#editContent .file-list`);
+    const container = this.el.querySelector('.file-list');
     if (!container) return;
     container.innerHTML = '';
     this.files.forEach((file, index) => {
@@ -643,9 +714,9 @@ class QuestionsBox extends BaseBox {
         <span class="file-name">${file.name}</span>
         <button class="del-file" data-index="${index}">×</button>
       `;
-      container.appendChild(row);
       const delBtn = row.querySelector('.del-file');
       delBtn.addEventListener('click', () => this.removeFile(index));
+      container.appendChild(row);
     });
   }
   addFile() {
@@ -683,47 +754,33 @@ class DecisionBox extends BaseBox {
     this.question = question || '¿Qué desea?';
     this.options = [];
     this.initElement();
-  }
-  _createHeader() {
-    return `
-      <div class="header">
-        <button class="del-box">×</button>
-        <strong>${this.title}</strong>
-        <small>${this.key}</small>
-        <button class="edit-button">Editar</button>
-      </div>
-    `;
+    const addBtn = this.el.querySelector('.add-branch');
+    if (addBtn) addBtn.addEventListener('click', () => this.addBranch());
+    const qInput = this.el.querySelector('.question-text');
+    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
+    this.renderBranches();
   }
   _createBody() {
-    return '<div class="body"></div>';
-  }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
-  }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Pregunta</label>
-        <input class="question-text" type="text" value="${this.question}" data-box="${this.id}">
-      </div>
-      <div class="box-field">
-        <label>Options (flow_id → [keywords])</label>
-        <div class="branches"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-branch">+ Opción</button>
+    return `
+      <div class="body">
+        <div class="box-field">
+          <label>Pregunta</label>
+          <input class="question-text" type="text" value="${this.question}">
+        </div>
+        <div class="box-field">
+          <label>Options (flow_id → [keywords])</label>
+          <div class="branches"></div>
+        </div>
       </div>
     `;
-    return content;
   }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const qInput = document.querySelector(`#editContent .question-text[data-box="${this.id}"]`);
-    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
-    const addBtn = document.querySelector(`#editContent .add-branch`);
-    if (addBtn) addBtn.addEventListener('click', () => this.addBranch());
-    this.renderBranches();
+  _createFooter() {
+    return `
+      <div class="footer">
+        <button class="add-branch">+ Opción</button>
+        <small>${this.type}</small>
+      </div>
+    `;
   }
   addBranch() {
     let idx = this.options.length + 1;
@@ -740,7 +797,7 @@ class DecisionBox extends BaseBox {
     this.flow.updateJSON();
   }
   renderBranches() {
-    const container = document.querySelector(`#editContent .branches`);
+    const container = this.el.querySelector('.branches');
     if (!container) return;
     container.innerHTML = '';
     this.options.forEach((opt, index) => {
@@ -748,11 +805,10 @@ class DecisionBox extends BaseBox {
       row.className = 'branch-row';
       row.dataset.index = index;
       row.innerHTML = `
-        <input class="branch-input" readonly type="text" value="${opt.flowId}" data-index="${index}">
-        <input class="branch-input" type="text" value="${opt.keywords.join(', ')}" data-index="${index}">
+        <input class="branch-input" readonly type="text" value="${opt.flowId}" placeholder="flow_id">
+        <input class="branch-input" type="text" value="${opt.keywords.join(', ')}" placeholder="keywords (comma-separated)">
         <button class="del">×</button>
       `;
-      container.appendChild(row);
       const [flowIdInput, keywordsInput, delBtn] = row.querySelectorAll('input,button');
       keywordsInput.addEventListener('input', e => {
         opt.keywords = e.target.value.split(',').map(k => k.trim()).filter(k => k);
@@ -782,10 +838,15 @@ class DecisionBox extends BaseBox {
         this.flow.requestUpdate();
         this.flow.updateJSON();
       });
+      container.appendChild(row);
+      const pos = `out${index}`;
+      if (!this.anchors[pos]) {
+        this.addAnchor(pos);
+      }
     });
   }
   repositionOutputs() {
-    const inputs = document.querySelectorAll(`#editContent .branch-row`);
+    const inputs = this.el.querySelectorAll('.branch-row');
     inputs.forEach((row, i) => {
       const pos = `out${i}`;
       const anchor = this.anchors[pos];
@@ -819,16 +880,6 @@ class FlowBox extends BaseBox {
     this.steps = [];
     this.initElement();
   }
-  _createBody() {
-    return '<div class="body"></div>';
-  }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
-  }
-  getEditContent() {
-    let content = super.getEditContent();
-    return content;
-  }
   serialize() {
     const base = super.serialize();
     base.steps = this.steps;
@@ -840,27 +891,18 @@ class EndBox extends BaseBox {
     super(flow, id, 'end', x, y, title, key);
     this.question = question || '¿Qué desea?';
     this.initElement();
+    const qInput = this.el.querySelector('.question-text');
+    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
   }
   _createBody() {
-    return '<div class="body"></div>';
-  }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
-  }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Pregunta</label>
-        <input class="question-text" type="text" value="${this.question}" data-box="${this.id}">
+    return `
+      <div class="body">
+        <div class="box-field">
+          <label>Pregunta</label>
+          <input class="question-text" type="text" value="${this.question}">
+        </div>
       </div>
     `;
-    return content;
-  }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const qInput = document.querySelector(`#editContent .question-text[data-box="${this.id}"]`);
-    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
   }
   serialize() {
     const base = super.serialize();
@@ -1216,11 +1258,14 @@ class Flowchart {
           box = new TriggerBox(this, b.id, b.x, b.y, b.title, b.key);
           box.triggers = b.triggers || [];
           box.steps = b.steps || [];
+          box.renderTriggers();
           break;
         case 'questions':
           box = new QuestionsBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?');
           box.options = Object.entries(b.options || {}).map(([key, keywords]) => ({ key, keywords }));
           box.files = b.files || [];
+          box.renderQuestionOptionsObject();
+          box.renderFiles();
           break;
         case 'decision':
           box = new DecisionBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?');
@@ -1229,6 +1274,8 @@ class Flowchart {
             const pos = `out${i}`;
             if (!box.anchors[pos]) box.addAnchor(pos);
           });
+          box.renderBranches();
+          box.repositionOutputs();
           box.h = 70 + (box.options.length * 25);
           box.el.style.minHeight = `${box.h}px`;
           break;
@@ -1298,3 +1345,5 @@ const FLOW = new Flowchart();
 </script>
 </body>
 </html>
+
+VERIIFCAR BIEN ESTO AQUI YA LA QUESTION SE SOLUCIONA PERO EL ZOOM ESTA AFECTANDO

@@ -6,45 +6,32 @@
 <title>Flowchart Minimalista</title>
 <style>
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  display: flex;
-  height: 100vh;
+body { 
+  margin: 0; 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; 
+  display: flex; 
+  height: 100vh; 
   background: #fafafa;
   color: #333;
 }
-.sidebar {
-  width: 240px;
-  padding: 20px;
+
+.sidebar { 
+  width: 240px; 
+  padding: 20px; 
   background: #fff;
   border-right: 1px solid #e5e5e5;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-.edit-panel {
-  width: 300px;
-  padding: 20px;
-  background: #fff;
-  border-left: 1px solid #e5e5e5;
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100vh;
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-}
-.edit-panel.open {
-  transform: translateX(0);
-}
-.sidebar h3, .edit-panel h3 {
+
+.sidebar h3 {
   margin: 0 0 16px 0;
   font-size: 18px;
   font-weight: 600;
   color: #111;
 }
+
 button {
   padding: 8px 12px;
   border: 1px solid #ddd;
@@ -55,40 +42,47 @@ button {
   font-weight: 500;
   transition: all 0.15s ease;
 }
+
 button:hover {
   background: #f8f8f8;
   border-color: #ccc;
 }
+
 button:active {
   transform: translateY(1px);
 }
+
 #clearFlow, #saveFlow, #loadFlow {
   background: #f5f5f5;
   color: #666;
   margin-top: 8px;
 }
+
 #clearFlow:hover, #saveFlow:hover, #loadFlow:hover {
   background: #eee;
 }
-.canvas-wrap {
-  flex: 1;
-  position: relative;
+
+.canvas-wrap { 
+  flex: 1; 
+  position: relative; 
   background: #fafafa;
   overflow: hidden;
 }
+
 .canvas-inner {
   width: 3000px;
   height: 3000px;
   position: relative;
   transform-origin: 0 0;
 }
-.box {
-  position: absolute;
-  min-height: 70px;
+
+.box { 
+  position: absolute; 
+  min-height: 70px; 
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  cursor: move;
+  cursor: move; 
   padding: 12px;
   font-size: 12px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
@@ -96,146 +90,162 @@ button:active {
   display: flex;
   flex-direction: column;
 }
+
 .box:hover {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
+
 .box .header {
   display: flex;
   flex-direction: column;
   gap: 4px;
   position: relative;
 }
+
 .box .body {
   flex: 1;
   margin: 8px 0;
-  text-align: center;
 }
+
 .box .footer {
   display: flex;
   flex-direction: column;
   gap: 4px;
   align-items: flex-start;
 }
+
 .box strong {
   font-size: 13px;
   font-weight: 600;
   display: block;
   margin-bottom: 4px;
 }
+
 .box small {
   color: #666;
   font-size: 11px;
 }
+
 .box.trigger { border-left: 3px solid #10b981; }
 .box.questions { border-left: 3px solid #3b82f6; }
 .box.decision { border-left: 3px solid #f59e0b; }
 .box.flow { border-left: 3px solid #8b5cf6; }
 .box.end { border-left: 3px solid #ef4444; }
-.anchor {
-  width: 6px;
-  height: 6px;
-  border: 1px solid #999;
-  border-radius: 50%;
-  position: absolute;
+
+.anchor { 
+  width: 6px; 
+  height: 6px; 
+  border: 1px solid #999; 
+  border-radius: 50%; 
+  position: absolute; 
   background: #fff;
   transition: all 0.15s ease;
 }
+
 .anchor:hover {
   width: 8px;
   height: 8px;
   border-color: #666;
   background: #f0f0f0;
 }
-.anchor[data-pos="left"] {
-  left: -4px;
-  top: 50%;
-  transform: translateY(-50%);
+
+.anchor[data-pos="left"] { 
+  left: -4px; 
+  top: 50%; 
+  transform: translateY(-50%); 
 }
-.anchor[data-pos="right"] {
-  right: -4px;
-  top: 50%;
-  transform: translateY(-50%);
+
+.anchor[data-pos="right"] { 
+  right: -4px; 
+  top: 50%; 
+  transform: translateY(-50%); 
 }
+
 .anchor.active-anchor {
   border-color: #3b82f6;
   background: #3b82f6;
   width: 8px;
   height: 8px;
 }
-.conn-line {
-  stroke: #666;
-  stroke-width: 1.5;
+
+.conn-line { 
+  stroke: #666; 
+  stroke-width: 1.5; 
   fill: none;
   opacity: 0.8;
 }
+
 .json-section {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #e5e5e5;
 }
+
 .json-section strong {
   font-size: 12px;
   color: #666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-pre {
-  font-size: 10px;
-  background: #f8f8f8;
-  padding: 12px;
+
+pre { 
+  font-size: 10px; 
+  background: #f8f8f8; 
+  padding: 12px; 
   border-radius: 6px;
-  max-height: 200px;
+  max-height: 200px; 
   overflow: auto;
   margin: 8px 0 0 0;
   border: 1px solid #e5e5e5;
   color: #555;
 }
+
 .anchor.hidden { display: none; }
-.edit-button {
-  padding: 4px 8px;
-  font-size: 10px;
-  background: #f8f8f8;
-  color: #666;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.edit-button:hover {
-  background: #eee;
-}
-.box-field {
-  margin-bottom: 10px;
-}
-.box-field label {
-  display: block;
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 4px;
-}
-.branch-row, .qopt-row, .trigger-row, .file-row {
+
+.branches {
   display: flex;
+  flex-direction: column;
   gap: 4px;
-  margin: 2px 0;
-  align-items: center;
+  margin: 8px 0;
 }
-.branch-input, .qopt-input, .trigger-input, .key-input, .title-input, .question-text {
+
+.branches .branch-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 4px;
+}
+
+.branches .branch-input { 
   padding: 4px 6px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 11px;
   background: #fafafa;
-  flex: 1;
 }
-.branch-input:focus, .qopt-input:focus, .trigger-input:focus, .key-input:focus, .title-input:focus, .question-text:focus {
+
+.branches .branch-input:focus {
   outline: none;
   border-color: #3b82f6;
   background: #fff;
 }
-.branch-input.invalid, .qopt-input.invalid, .key-input.invalid {
-  border-color: #ef4444;
-  background: #fef2f2;
+
+.add-branch {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
 }
-.del, .del-trigger, .del-qopt, .del-file {
+
+.add-branch:hover {
+  background: #eee;
+}
+
+.del-box {
+  position: absolute;
+  top: 4px;
+  right: 4px;
   padding: 2px 6px;
   font-size: 10px;
   background: #fee2e2;
@@ -244,10 +254,138 @@ pre {
   border-radius: 4px;
   cursor: pointer;
 }
-.del:hover, .del-trigger:hover, .del-qopt:hover, .del-file:hover {
+
+.del-box:hover {
   background: #fecaca;
 }
-.add-branch, .add-qopt, .add-trigger, .add-file {
+
+.key-input {
+  margin-top: 4px;
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.key-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.key-input.invalid {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.title-input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.question-text {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.question-text:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.trigger-list .trigger-row {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0;
+}
+
+.trigger-list .trigger-input {
+  flex: 1;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.trigger-list .trigger-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.trigger-list .del-trigger {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.trigger-list .del-trigger:hover {
+  background: #fecaca;
+}
+
+.qopt-list .qopt-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  gap: 4px;
+  margin: 2px 0;
+}
+
+.qopt-list .qopt-input {
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 11px;
+  background: #fafafa;
+}
+
+.qopt-list .qopt-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  background: #fff;
+}
+
+.qopt-list .qopt-input.invalid {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.qopt-list .del-qopt {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.qopt-list .del-qopt:hover {
+  background: #fecaca;
+}
+
+.add-trigger {
   font-size: 10px;
   padding: 4px 8px;
   margin-top: 4px;
@@ -255,11 +393,164 @@ pre {
   color: #666;
   border: 1px solid #e5e5e5;
 }
-.add-branch:hover, .add-qopt:hover, .add-trigger:hover, .add-file:hover {
+
+.add-trigger:hover {
   background: #eee;
 }
-.file-name {
+
+.add-qopt {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.add-qopt:hover {
+  background: #eee;
+}
+
+.file-list .file-row {
+  display: flex;
+  gap: 4px;
+  margin: 2px 0;
+  align-items: center;
+}
+
+.file-list .file-name {
   flex: 1;
+  font-size: 11px;
+  color: #333;
+}
+
+.file-list .del-file {
+  padding: 2px 6px;
+  font-size: 10px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-list .del-file:hover {
+  background: #fecaca;
+}
+
+.file-list .preview-img {
+  max-width: 50px;
+  max-height: 50px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.file-list .loading {
+  font-size: 11px;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.file-list .loading::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-left: 5px;
+  border: 2px solid #ccc;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.add-file {
+  font-size: 10px;
+  padding: 4px 8px;
+  margin-top: 4px;
+  background: #f8f8f8;
+  color: #666;
+  border: 1px solid #e5e5e5;
+}
+
+.add-file:hover {
+  background: #eee;
+}
+
+.edit-btn {
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.edit-btn:hover {
+  background: #e5e5e5;
+}
+
+.editor-panel {
+  width: 300px;
+  padding: 20px;
+  background: #fff;
+  border-left: 1px solid #e5e5e5;
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: auto;
+  z-index: 1000;
+}
+
+.editor-panel.hidden {
+  display: none !important;
+}
+
+.editor-panel h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+}
+
+.editor-panel .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 2px 6px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editor-panel .close-btn:hover {
+  background: #fecaca;
+}
+
+.box .display-value {
+  font-size: 11px;
+  color: #333;
+  margin: 4px 0;
+}
+
+.box .display-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0;
+}
+
+.box .display-list li {
   font-size: 11px;
   color: #333;
 }
@@ -281,18 +572,23 @@ pre {
 <pre id="jsonView">{}</pre>
 </div>
 </aside>
+
 <div class="canvas-wrap">
   <div class="canvas-inner" id="canvas">
     <svg id="svg" width="3000" height="3000" style="position:absolute;left:0;top:0;pointer-events:none"></svg>
   </div>
 </div>
-<div class="edit-panel" id="editPanel">
-  <h3>Edición</h3>
-  <div id="editContent"></div>
+
+<div class="editor-panel hidden" id="editorPanel">
+  <button class="close-btn">×</button>
+  <div id="editorContent"></div>
 </div>
+
 <input type="file" id="fileInput" style="display:none" accept=".json">
+
 <script>
 // Core: Base Classes and Common Logic
+
 class BaseBox {
   constructor(flow, id, type, x=60, y=60, title='Nodo', key=`${type}_${id.split('_')[1]}`) {
     this.flow = flow;
@@ -305,41 +601,50 @@ class BaseBox {
     this.title = title;
     this.key = key;
     this.anchors = {};
-    this.isEditing = false;
-  }
-  initElement() {
     this.el = this._createElement();
     this._enableDrag();
     this.updatePosition();
-    this._validateKey();
     const delBoxBtn = this.el.querySelector('.del-box');
-    if (delBoxBtn) delBoxBtn.addEventListener('click', () => this.flow.removeBox(this.id));
+    if (delBoxBtn) {
+      delBoxBtn.addEventListener('click', () => this.flow.removeBox(this.id));
+    } else {
+      console.warn(`Botón de eliminar no encontrado en el nodo ${this.id}`);
+    }
+    const editBtn = this.el.querySelector('.edit-btn');
+    if (editBtn) {
+      editBtn.addEventListener('click', () => {
+        console.log(`Botón Editar clicado para el nodo ${this.id} (${this.type})`);
+        this.flow.openEditor(this);
+      });
+    } else {
+      console.warn(`Botón de editar no encontrado en el nodo ${this.id}`);
+    }
     this.addAnchors();
-    const editBtn = this.el.querySelector('.edit-button');
-    if (editBtn) editBtn.addEventListener('click', () => this.toggleEditPanel());
+    this.renderDisplay();
   }
+
   _validateKey() {
-    const keyInput = document.querySelector(`#editContent .key-input[data-box="${this.id}"]`);
-    if (!keyInput) return;
-    const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
-    keyInput.classList.toggle('invalid', isDuplicate);
-    keyInput.title = isDuplicate ? 'Clave duplicada' : '';
+    // Validation moved to editor panel
   }
+
   _createHeader() {
     return `
       <div class="header">
         <button class="del-box">×</button>
-        <strong>${this.title}</strong>
-        <small>${this.key}</small>
+        <span class="display-value">${this.title}</span>
+        <span class="display-value">Key: ${this.key}</span>
       </div>
     `;
   }
+
   _createBody() {
-    return '<div class="body"></div>';
+    return '<div class="body"><button class="edit-btn">Editar</button></div>';
   }
+
   _createFooter() {
     return `<div class="footer"><small>${this.type}</small></div>`;
   }
+
   _createElement() {
     const el = document.createElement('div');
     el.className = `box ${this.type}`;
@@ -348,10 +653,21 @@ class BaseBox {
     this.flow.stage.appendChild(el);
     return el;
   }
+
+  renderDisplay() {
+    // To be overridden by subclasses for display-only content
+  }
+
+  createEditorContent(panel) {
+    console.log(`Creando contenido de editor para el nodo ${this.id} (${this.type})`);
+    panel.innerHTML = `<h3>Editar ${this.type}</h3><p>Editor base para ${this.type}</p>`;
+  }
+
   addAnchors() {
     if (this.isInputAllowed('left')) this.addAnchor('left');
     if (this.isOutputAllowed('right')) this.addAnchor('right');
   }
+
   addAnchor(pos) {
     const anchor = document.createElement('div');
     anchor.className = 'anchor';
@@ -360,14 +676,17 @@ class BaseBox {
     this.el.appendChild(anchor);
     this.anchors[pos] = anchor;
   }
+
   isInputAllowed(pos) {
     return this.type !== 'trigger' && pos === 'left';
   }
+
   isOutputAllowed(pos) {
     if (this.type === 'end') return false;
     if (this.type === 'decision') return pos.startsWith('out');
     return pos === 'right';
   }
+
   _enableDrag() {
     let startX, startY, origX, origY, dragging = false;
     this.el.addEventListener('mousedown', e => {
@@ -393,6 +712,7 @@ class BaseBox {
       }
     });
   }
+
   getAnchorPos(pos) {
     const anchorEl = this.anchors[pos];
     if (!anchorEl || anchorEl.classList.contains('hidden')) return null;
@@ -403,41 +723,11 @@ class BaseBox {
       y: (rect.top + rect.height / 2 - canvasRect.top) / this.flow.zoom - this.flow.panY
     };
   }
+
   updatePosition() {
     this.el.style.transform = `translate(${this.x}px, ${this.y}px)`;
   }
-  toggleEditPanel() {
-    const panel = document.getElementById('editPanel');
-    const content = document.getElementById('editContent');
-    if (this.isEditing) {
-      panel.classList.remove('open');
-      content.innerHTML = '';
-      this.isEditing = false;
-    } else {
-      content.innerHTML = this.getEditContent();
-      panel.classList.add('open');
-      this.isEditing = true;
-      this._bindEditEvents();
-    }
-  }
-  getEditContent() {
-    return `
-      <div class="box-field">
-        <label>Título</label>
-        <input class="title-input" type="text" value="${this.title}" data-box="${this.id}">
-      </div>
-      <div class="box-field">
-        <label>Clave</label>
-        <input class="key-input" type="text" value="${this.key}" data-box="${this.id}">
-      </div>
-    `;
-  }
-  _bindEditEvents() {
-    const titleInput = document.querySelector(`#editContent .title-input[data-box="${this.id}"]`);
-    if (titleInput) titleInput.addEventListener('input', e => { this.title = e.target.value; this.el.querySelector('strong').textContent = this.title; this.flow.updateJSON(); });
-    const keyInput = document.querySelector(`#editContent .key-input[data-box="${this.id}"]`);
-    if (keyInput) keyInput.addEventListener('input', e => { this.key = e.target.value; this.el.querySelector('small').textContent = this.key; this._validateKey(); this.flow.updateJSON(); });
-  }
+
   serialize() {
     return {
       id: this.id,
@@ -450,60 +740,82 @@ class BaseBox {
       key: this.key
     };
   }
+
   destroy() {
     this.el.remove();
-    if (this.isEditing) {
-      const panel = document.getElementById('editPanel');
-      panel.classList.remove('open');
-      document.getElementById('editContent').innerHTML = '';
-    }
   }
 }
+
 // Node-Specific Classes
+
 class TriggerBox extends BaseBox {
-  constructor(flow, id, x, y, title, key) {
+  constructor(flow, id, x, y, title, key, triggers = []) {
     super(flow, id, 'trigger', x, y, title, key);
-    this.triggers = ['hola', 'hello'];
+    this.triggers = triggers.length ? triggers : ['hola', 'hello'];
     this.steps = [];
-    this.initElement();
   }
-  _createBody() {
-    return '<div class="body"></div>';
+
+  renderDisplay() {
+    const body = this.el.querySelector('.body');
+    body.innerHTML = '<button class="edit-btn">Editar</button><ul class="display-list"></ul>';
+    const list = body.querySelector('.display-list');
+    (this.triggers || []).forEach(trigger => {
+      const li = document.createElement('li');
+      li.textContent = trigger;
+      list.appendChild(li);
+    });
   }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
+
+  createEditorContent(panel) {
+    console.log(`Creando editor para TriggerBox ${this.id}`);
+    try {
+      panel.innerHTML = `
+        <h3>Editar Trigger</h3>
+        <input id="editTitle" type="text" value="${this.title}" placeholder="Título">
+        <input id="editKey" type="text" value="${this.key}" placeholder="Key">
+        <div class="trigger-list" id="editTriggers"></div>
+        <button id="addTriggerBtn">+ Palabra</button>
+      `;
+      const titleInput = panel.querySelector('#editTitle');
+      titleInput.addEventListener('input', e => {
+        this.title = e.target.value;
+        this.el.querySelector('.display-value').textContent = this.title;
+        this.flow.updateJSON();
+      });
+      const keyInput = panel.querySelector('#editKey');
+      keyInput.addEventListener('input', e => {
+        this.key = e.target.value;
+        this._validateKeyInPanel(keyInput);
+        this.el.querySelectorAll('.display-value')[1].textContent = `Key: ${this.key}`;
+        this.flow.updateJSON();
+      });
+      this.renderTriggersInEditor(panel.querySelector('#editTriggers'));
+      const addTriggerBtn = panel.querySelector('#addTriggerBtn');
+      if (addTriggerBtn) {
+        addTriggerBtn.addEventListener('click', () => this.addTriggerInEditor(panel));
+      } else {
+        console.warn('Botón #addTriggerBtn no encontrado');
+      }
+    } catch (err) {
+      console.error(`Error en createEditorContent para TriggerBox ${this.id}:`, err);
+    }
   }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Palabras</label>
-        <div class="trigger-list"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-trigger">+ Palabra</button>
-      </div>
-    `;
-    return content;
+
+  _validateKeyInPanel(input) {
+    const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
+    input.classList.toggle('invalid', isDuplicate);
+    input.title = isDuplicate ? 'Clave duplicada' : '';
   }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const addBtn = document.querySelector(`#editContent .add-trigger`);
-    if (addBtn) addBtn.addEventListener('click', () => this.addTrigger());
-    this.renderTriggers();
-  }
-  renderTriggers() {
-    const container = document.querySelector(`#editContent .trigger-list`);
-    if (!container) return;
+
+  renderTriggersInEditor(container) {
     container.innerHTML = '';
-    this.triggers.forEach((word, index) => {
+    (this.triggers || []).forEach((word, index) => {
       const row = document.createElement('div');
       row.className = 'trigger-row';
       row.innerHTML = `
-        <input class="trigger-input" type="text" value="${word}" data-index="${index}">
-        <button class="del-trigger">×</button>
+        <input class="trigger-input" type="text" value="${word}">
+        <button class="del-trigger" data-index="${index}">×</button>
       `;
-      container.appendChild(row);
       const input = row.querySelector('.trigger-input');
       input.addEventListener('input', e => {
         this.triggers[index] = e.target.value;
@@ -511,98 +823,149 @@ class TriggerBox extends BaseBox {
       });
       const delBtn = row.querySelector('.del-trigger');
       delBtn.addEventListener('click', () => this.removeTrigger(index));
+      container.appendChild(row);
     });
   }
-  addTrigger() {
+
+  addTriggerInEditor(panel) {
+    this.triggers = this.triggers || [];
     this.triggers.push('');
-    this.renderTriggers();
+    this.renderTriggersInEditor(panel.querySelector('#editTriggers'));
     this.h += 25;
     this.el.style.minHeight = `${this.h}px`;
     this.flow.requestUpdate();
     this.flow.updateJSON();
+    this.renderDisplay();
   }
+
   removeTrigger(index) {
+    this.triggers = this.triggers || [];
     this.triggers.splice(index, 1);
-    this.renderTriggers();
+    const panel = document.getElementById('editorPanel');
+    if (!panel.classList.contains('hidden') && this.flow.currentEditingBox === this) {
+      this.renderTriggersInEditor(panel.querySelector('#editTriggers'));
+    }
     this.h = 70 + (this.triggers.length * 25);
     this.el.style.minHeight = `${this.h}px`;
     this.flow.requestUpdate();
     this.flow.updateJSON();
+    this.renderDisplay();
   }
+
   serialize() {
     const base = super.serialize();
-    base.triggers = this.triggers;
-    base.steps = this.steps;
+    base.triggers = this.triggers || [];
+    base.steps = this.steps || [];
     return base;
   }
 }
+
 class QuestionsBox extends BaseBox {
-  constructor(flow, id, x, y, title, key, question = '¿Qué desea?') {
+  constructor(flow, id, x, y, title, key, question = '¿Qué desea?', options = [], files = []) {
     super(flow, id, 'questions', x, y, title, key);
-    this.question = question || '¿Qué desea?';
-    this.options = [
+    this.question = question;
+    this.options = options.length ? options : [
       { key: 'cafe', keywords: ['cafe', 'coffee', 'cafes'] },
       { key: 'latte', keywords: ['latte', 'latte coffee'] },
       { key: 'americano', keywords: ['americano', 'american coffee'] },
       { key: 'cappuccino', keywords: ['cappuccino', 'cappucino'] }
     ];
-    this.files = [];
-    this.initElement();
+    this.files = files || [];
   }
-  _createBody() {
-    return '<div class="body"></div>';
+
+  renderDisplay() {
+    const body = this.el.querySelector('.body');
+    body.innerHTML = '<button class="edit-btn">Editar</button>';
+    body.innerHTML += `<span class="display-value">Pregunta: ${this.question || '¿Qué desea?'}</span>`;
+    body.innerHTML += '<ul class="display-list">';
+    const list = body.querySelector('.display-list');
+    (this.options || []).forEach(opt => {
+      const li = document.createElement('li');
+      li.textContent = `${opt.key}: ${opt.keywords.join(', ')}`;
+      list.appendChild(li);
+    });
+    body.innerHTML += '</ul>';
+    body.innerHTML += '<ul class="display-list file-list">';
+    const fileList = body.querySelector('.file-list');
+    (this.files || []).forEach(file => {
+      const li = document.createElement('li');
+      if (file.type && file.type.startsWith('image/')) {
+        li.innerHTML = `<img class="preview-img" src="${file.url}" alt="${file.name}">`;
+      } else {
+        li.textContent = file.name;
+      }
+      fileList.appendChild(li);
+    });
+    body.innerHTML += '</ul>';
   }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
+
+  createEditorContent(panel) {
+    console.log(`Creando editor para QuestionsBox ${this.id}`);
+    try {
+      panel.innerHTML = `
+        <h3>Editar Questions</h3>
+        <input id="editTitle" type="text" value="${this.title}" placeholder="Título">
+        <input id="editKey" type="text" value="${this.key}" placeholder="Key">
+        <input id="editQuestion" type="text" value="${this.question}" placeholder="Pregunta">
+        <div class="qopt-list" id="editOptions"></div>
+        <button id="addQoptBtn">+ Opción</button>
+        <div class="file-list" id="editFiles"></div>
+        <button id="addFileBtn">+ Archivo</button>
+      `;
+      const titleInput = panel.querySelector('#editTitle');
+      titleInput.addEventListener('input', e => {
+        this.title = e.target.value;
+        this.el.querySelector('.display-value').textContent = this.title;
+        this.flow.updateJSON();
+      });
+      const keyInput = panel.querySelector('#editKey');
+      keyInput.addEventListener('input', e => {
+        this.key = e.target.value;
+        this._validateKeyInPanel(keyInput);
+        this.el.querySelectorAll('.display-value')[1].textContent = `Key: ${this.key}`;
+        this.flow.updateJSON();
+      });
+      const questionInput = panel.querySelector('#editQuestion');
+      questionInput.addEventListener('input', e => {
+        this.question = e.target.value;
+        this.flow.updateJSON();
+        this.renderDisplay();
+      });
+      this.renderQuestionOptionsInEditor(panel.querySelector('#editOptions'));
+      const addQoptBtn = panel.querySelector('#addQoptBtn');
+      if (addQoptBtn) {
+        addQoptBtn.addEventListener('click', () => this.addQuestionOptionInEditor(panel));
+      } else {
+        console.warn('Botón #addQoptBtn no encontrado');
+      }
+      this.renderFilesInEditor(panel.querySelector('#editFiles'));
+      const addFileBtn = panel.querySelector('#addFileBtn');
+      if (addFileBtn) {
+        addFileBtn.addEventListener('click', () => this.addFileInEditor(panel));
+      } else {
+        console.warn('Botón #addFileBtn no encontrado');
+      }
+    } catch (err) {
+      console.error(`Error en createEditorContent para QuestionsBox ${this.id}:`, err);
+    }
   }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Pregunta</label>
-        <input class="question-text" type="text" value="${this.question}" data-box="${this.id}">
-      </div>
-      <div class="box-field">
-        <label>Options (key → [keywords])</label>
-        <div class="qopt-list"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-qopt">+ Opción</button>
-      </div>
-      <div class="box-field">
-        <label>Archivos</label>
-        <div class="file-list"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-file">+ Archivo</button>
-      </div>
-    `;
-    return content;
+
+  _validateKeyInPanel(input) {
+    const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
+    input.classList.toggle('invalid', isDuplicate);
+    input.title = isDuplicate ? 'Clave duplicada' : '';
   }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const qInput = document.querySelector(`#editContent .question-text[data-box="${this.id}"]`);
-    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
-    const addOptBtn = document.querySelector(`#editContent .add-qopt`);
-    if (addOptBtn) addOptBtn.addEventListener('click', () => this.addQuestionOptionObject());
-    const addFileBtn = document.querySelector(`#editContent .add-file`);
-    if (addFileBtn) addFileBtn.addEventListener('click', () => this.addFile());
-    this.renderQuestionOptionsObject();
-    this.renderFiles();
-  }
-  renderQuestionOptionsObject() {
-    const container = document.querySelector(`#editContent .qopt-list`);
-    if (!container) return;
+
+  renderQuestionOptionsInEditor(container) {
     container.innerHTML = '';
-    this.options.forEach((opt, index) => {
+    (this.options || []).forEach((opt, index) => {
       const row = document.createElement('div');
       row.className = 'qopt-row';
       row.innerHTML = `
-        <input class="qopt-input" type="text" value="${opt.key}" data-index="${index}">
-        <input class="qopt-input" type="text" value="${opt.keywords.join(', ')}" data-index="${index}">
+        <input class="qopt-input" type="text" value="${opt.key}" placeholder="key">
+        <input class="qopt-input" type="text" value="${opt.keywords.join(', ')}" placeholder="keywords (comma-separated)">
         <button class="del-qopt">×</button>
       `;
-      container.appendChild(row);
       const [keyInput, keywordsInput, delBtn] = row.querySelectorAll('.qopt-input, .del-qopt');
       keyInput.addEventListener('input', e => {
         const oldKey = opt.key;
@@ -620,139 +983,181 @@ class QuestionsBox extends BaseBox {
       });
       delBtn.addEventListener('click', () => {
         this.options.splice(index, 1);
-        this.renderQuestionOptionsObject();
+        this.renderQuestionOptionsInEditor(container);
         this.flow.updateJSON();
+        this.renderDisplay();
       });
+      container.appendChild(row);
     });
   }
-  addQuestionOptionObject() {
+
+  addQuestionOptionInEditor(panel) {
+    this.options = this.options || [];
     let base = 'option';
     let idx = this.options.length + 1;
     this.options.push({ key: `${base}${idx}`, keywords: [''] });
-    this.renderQuestionOptionsObject();
+    this.renderQuestionOptionsInEditor(panel.querySelector('#editOptions'));
     this.flow.updateJSON();
+    this.renderDisplay();
   }
-  renderFiles() {
-    const container = document.querySelector(`#editContent .file-list`);
-    if (!container) return;
+
+  renderFilesInEditor(container) {
     container.innerHTML = '';
-    this.files.forEach((file, index) => {
+    (this.files || []).forEach((file, index) => {
       const row = document.createElement('div');
       row.className = 'file-row';
-      row.innerHTML = `
+      row.innerHTML = file.loading ? '<span class="loading">Cargando...</span>' : `
+        ${file.type && file.type.startsWith('image/') ? `<img class="preview-img" src="${file.url}" alt="${file.name}">` : ''}
         <span class="file-name">${file.name}</span>
         <button class="del-file" data-index="${index}">×</button>
       `;
+      if (!file.loading) {
+        const delBtn = row.querySelector('.del-file');
+        delBtn.addEventListener('click', () => this.removeFile(index));
+      }
       container.appendChild(row);
-      const delBtn = row.querySelector('.del-file');
-      delBtn.addEventListener('click', () => this.removeFile(index));
     });
   }
-  addFile() {
+
+  async addFileInEditor(panel) {
     const input = document.createElement('input');
     input.type = 'file';
     input.multiple = true;
-    input.addEventListener('change', e => {
-      Array.from(e.target.files).forEach(file => {
-        this.files.push(file);
-      });
-      this.renderFiles();
-      this.flow.updateJSON();
+    input.addEventListener('change', async e => {
+      const files = Array.from(e.target.files);
+      for (const file of files) {
+        const tempIndex = this.files.length;
+        this.files = this.files || [];
+        this.files.push({ name: file.name, type: file.type, loading: true });
+        this.renderFilesInEditor(panel.querySelector('#editFiles'));
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          const response = await fetch('upload.php', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await response.json();
+          if (data.success) {
+            this.files[tempIndex] = { name: file.name, type: file.type, url: `uploads/${file.name}`, loading: false };
+          } else {
+            throw new Error(data.error);
+          }
+        } catch (err) {
+          console.error('Upload error:', err);
+          this.files.splice(tempIndex, 1);
+        }
+        this.renderFilesInEditor(panel.querySelector('#editFiles'));
+        this.flow.updateJSON();
+        this.renderDisplay();
+      }
     });
     input.click();
   }
+
   removeFile(index) {
+    this.files = this.files || [];
     this.files.splice(index, 1);
-    this.renderFiles();
+    const panel = document.getElementById('editorPanel');
+    if (!panel.classList.contains('hidden') && this.flow.currentEditingBox === this) {
+      this.renderFilesInEditor(panel.querySelector('#editFiles'));
+    }
     this.flow.updateJSON();
+    this.renderDisplay();
   }
+
   serialize() {
     const base = super.serialize();
     base.question = this.question;
-    base.options = this.options.reduce((acc, opt) => {
+    base.options = (this.options || []).reduce((acc, opt) => {
       acc[opt.key] = opt.keywords;
       return acc;
     }, {});
-    base.files = this.files.map(file => ({ name: file.name }));
+    base.files = (this.files || []).map(file => ({ name: file.name, url: file.url || null }));
     return base;
   }
 }
+
 class DecisionBox extends BaseBox {
-  constructor(flow, id, x, y, title, key, question = '¿Qué desea?') {
+  constructor(flow, id, x, y, title, key, question = '¿Qué desea?', options = []) {
     super(flow, id, 'decision', x, y, title, key);
-    this.question = question || '¿Qué desea?';
-    this.options = [];
-    this.initElement();
+    this.question = question;
+    this.options = options || [];
   }
-  _createHeader() {
-    return `
-      <div class="header">
-        <button class="del-box">×</button>
-        <strong>${this.title}</strong>
-        <small>${this.key}</small>
-        <button class="edit-button">Editar</button>
-      </div>
-    `;
+
+  renderDisplay() {
+    const body = this.el.querySelector('.body');
+    body.innerHTML = '<button class="edit-btn">Editar</button>';
+    body.innerHTML += `<span class="display-value">Pregunta: ${this.question || '¿Qué desea?'}</span>`;
+    body.innerHTML += '<ul class="display-list">';
+    const list = body.querySelector('.display-list');
+    (this.options || []).forEach(opt => {
+      const li = document.createElement('li');
+      li.textContent = `${opt.flowId}: ${opt.keywords.join(', ')}`;
+      list.appendChild(li);
+    });
+    body.innerHTML += '</ul>';
   }
-  _createBody() {
-    return '<div class="body"></div>';
-  }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
-  }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Pregunta</label>
-        <input class="question-text" type="text" value="${this.question}" data-box="${this.id}">
-      </div>
-      <div class="box-field">
-        <label>Options (flow_id → [keywords])</label>
-        <div class="branches"></div>
-      </div>
-      <div class="box-field">
-        <button class="add-branch">+ Opción</button>
-      </div>
-    `;
-    return content;
-  }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const qInput = document.querySelector(`#editContent .question-text[data-box="${this.id}"]`);
-    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
-    const addBtn = document.querySelector(`#editContent .add-branch`);
-    if (addBtn) addBtn.addEventListener('click', () => this.addBranch());
-    this.renderBranches();
-  }
-  addBranch() {
-    let idx = this.options.length + 1;
-    this.options.push({ flowId: `option${idx}`, keywords: [''] });
-    this.renderBranches();
-    const pos = `out${this.options.length - 1}`;
-    if (!this.anchors[pos]) {
-      this.addAnchor(pos);
+
+  createEditorContent(panel) {
+    console.log(`Creando editor para DecisionBox ${this.id}`);
+    try {
+      panel.innerHTML = `
+        <h3>Editar Decision</h3>
+        <input id="editTitle" type="text" value="${this.title}" placeholder="Título">
+        <input id="editKey" type="text" value="${this.key}" placeholder="Key">
+        <input id="editQuestion" type="text" value="${this.question}" placeholder="Pregunta">
+        <div class="branches" id="editBranches"></div>
+        <button id="addBranchBtn">+ Opción</button>
+      `;
+      const titleInput = panel.querySelector('#editTitle');
+      titleInput.addEventListener('input', e => {
+        this.title = e.target.value;
+        this.el.querySelector('.display-value').textContent = this.title;
+        this.flow.updateJSON();
+      });
+      const keyInput = panel.querySelector('#editKey');
+      keyInput.addEventListener('input', e => {
+        this.key = e.target.value;
+        this._validateKeyInPanel(keyInput);
+        this.el.querySelectorAll('.display-value')[1].textContent = `Key: ${this.key}`;
+        this.flow.updateJSON();
+      });
+      const questionInput = panel.querySelector('#editQuestion');
+      questionInput.addEventListener('input', e => {
+        this.question = e.target.value;
+        this.flow.updateJSON();
+        this.renderDisplay();
+      });
+      this.renderBranchesInEditor(panel.querySelector('#editBranches'));
+      const addBranchBtn = panel.querySelector('#addBranchBtn');
+      if (addBranchBtn) {
+        addBranchBtn.addEventListener('click', () => this.addBranchInEditor(panel));
+      } else {
+        console.warn('Botón #addBranchBtn no encontrado');
+      }
+    } catch (err) {
+      console.error(`Error en createEditorContent para DecisionBox ${this.id}:`, err);
     }
-    this.repositionOutputs();
-    this.h += 25;
-    this.el.style.minHeight = `${this.h}px`;
-    this.flow.requestUpdate();
-    this.flow.updateJSON();
   }
-  renderBranches() {
-    const container = document.querySelector(`#editContent .branches`);
-    if (!container) return;
+
+  _validateKeyInPanel(input) {
+    const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
+    input.classList.toggle('invalid', isDuplicate);
+    input.title = isDuplicate ? 'Clave duplicada' : '';
+  }
+
+  renderBranchesInEditor(container) {
     container.innerHTML = '';
-    this.options.forEach((opt, index) => {
+    (this.options || []).forEach((opt, index) => {
       const row = document.createElement('div');
       row.className = 'branch-row';
       row.dataset.index = index;
       row.innerHTML = `
-        <input class="branch-input" readonly type="text" value="${opt.flowId}" data-index="${index}">
-        <input class="branch-input" type="text" value="${opt.keywords.join(', ')}" data-index="${index}">
+        <input class="branch-input" readonly type="text" value="${opt.flowId}" placeholder="flow_id">
+        <input class="branch-input" type="text" value="${opt.keywords.join(', ')}" placeholder="keywords (comma-separated)">
         <button class="del">×</button>
       `;
-      container.appendChild(row);
       const [flowIdInput, keywordsInput, delBtn] = row.querySelectorAll('input,button');
       keywordsInput.addEventListener('input', e => {
         opt.keywords = e.target.value.split(',').map(k => k.trim()).filter(k => k);
@@ -775,17 +1180,41 @@ class DecisionBox extends BaseBox {
             conn.fromAnchor = `out${anchorIndex - 1}`;
           }
         });
-        this.renderBranches();
+        this.renderBranchesInEditor(container);
         this.h = 70 + (this.options.length * 25);
         this.el.style.minHeight = `${this.h}px`;
         this.repositionOutputs();
         this.flow.requestUpdate();
         this.flow.updateJSON();
+        this.renderDisplay();
       });
+      container.appendChild(row);
+      const pos = `out${index}`;
+      if (!this.anchors[pos]) {
+        this.addAnchor(pos);
+      }
     });
   }
+
+  addBranchInEditor(panel) {
+    this.options = this.options || [];
+    let idx = this.options.length + 1;
+    this.options.push({ flowId: `option${idx}`, keywords: [''] });
+    this.renderBranchesInEditor(panel.querySelector('#editBranches'));
+    const pos = `out${this.options.length - 1}`;
+    if (!this.anchors[pos]) {
+      this.addAnchor(pos);
+    }
+    this.repositionOutputs();
+    this.h += 25;
+    this.el.style.minHeight = `${this.h}px`;
+    this.flow.requestUpdate();
+    this.flow.updateJSON();
+    this.renderDisplay();
+  }
+
   repositionOutputs() {
-    const inputs = document.querySelectorAll(`#editContent .branch-row`);
+    const inputs = document.getElementById('editorPanel').querySelectorAll('.branch-row') || [];
     inputs.forEach((row, i) => {
       const pos = `out${i}`;
       const anchor = this.anchors[pos];
@@ -799,84 +1228,141 @@ class DecisionBox extends BaseBox {
       }
     });
   }
-  updatePosition() {
-    super.updatePosition();
-    this.repositionOutputs();
-  }
+
   serialize() {
     const base = super.serialize();
     base.question = this.question;
-    base.options = this.options.reduce((acc, opt) => {
+    base.options = (this.options || []).reduce((acc, opt) => {
       acc[opt.flowId] = opt.keywords;
       return acc;
     }, {});
     return base;
   }
 }
+
 class FlowBox extends BaseBox {
-  constructor(flow, id, x, y, title, key) {
+  constructor(flow, id, x, y, title, key, steps = []) {
     super(flow, id, 'flow', x, y, title, key);
-    this.steps = [];
-    this.initElement();
+    this.steps = steps || [];
   }
-  _createBody() {
-    return '<div class="body"></div>';
+
+  renderDisplay() {
+    const body = this.el.querySelector('.body');
+    body.innerHTML = '<button class="edit-btn">Editar</button>';
   }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
+
+  createEditorContent(panel) {
+    console.log(`Creando editor para FlowBox ${this.id}`);
+    try {
+      panel.innerHTML = `
+        <h3>Editar Flow</h3>
+        <input id="editTitle" type="text" value="${this.title}" placeholder="Título">
+        <input id="editKey" type="text" value="${this.key}" placeholder="Key">
+      `;
+      const titleInput = panel.querySelector('#editTitle');
+      titleInput.addEventListener('input', e => {
+        this.title = e.target.value;
+        this.el.querySelector('.display-value').textContent = this.title;
+        this.flow.updateJSON();
+      });
+      const keyInput = panel.querySelector('#editKey');
+      keyInput.addEventListener('input', e => {
+        this.key = e.target.value;
+        this._validateKeyInPanel(keyInput);
+        this.el.querySelectorAll('.display-value')[1].textContent = `Key: ${this.key}`;
+        this.flow.updateJSON();
+      });
+    } catch (err) {
+      console.error(`Error en createEditorContent para FlowBox ${this.id}:`, err);
+    }
   }
-  getEditContent() {
-    let content = super.getEditContent();
-    return content;
+
+  _validateKeyInPanel(input) {
+    const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
+    input.classList.toggle('invalid', isDuplicate);
+    input.title = isDuplicate ? 'Clave duplicada' : '';
   }
+
   serialize() {
     const base = super.serialize();
-    base.steps = this.steps;
+    base.steps = this.steps || [];
     return base;
   }
 }
+
 class EndBox extends BaseBox {
   constructor(flow, id, x, y, title, key, question = '¿Qué desea?') {
     super(flow, id, 'end', x, y, title, key);
-    this.question = question || '¿Qué desea?';
-    this.initElement();
+    this.question = question;
   }
-  _createBody() {
-    return '<div class="body"></div>';
+
+  renderDisplay() {
+    const body = this.el.querySelector('.body');
+    body.innerHTML = '<button class="edit-btn">Editar</button>';
+    body.innerHTML += `<span class="display-value">Pregunta: ${this.question || '¿Qué desea?'}</span>`;
   }
-  _createFooter() {
-    return `<div class="footer"><small>${this.type}</small></div>`;
+
+  createEditorContent(panel) {
+    console.log(`Creando editor para EndBox ${this.id}`);
+    try {
+      panel.innerHTML = `
+        <h3>Editar End</h3>
+        <input id="editTitle" type="text" value="${this.title}" placeholder="Título">
+        <input id="editKey" type="text" value="${this.key}" placeholder="Key">
+        <input id="editQuestion" type="text" value="${this.question}" placeholder="Pregunta">
+      `;
+      const titleInput = panel.querySelector('#editTitle');
+      titleInput.addEventListener('input', e => {
+        this.title = e.target.value;
+        this.el.querySelector('.display-value').textContent = this.title;
+        this.flow.updateJSON();
+      });
+      const keyInput = panel.querySelector('#editKey');
+      keyInput.addEventListener('input', e => {
+        this.key = e.target.value;
+        this._validateKeyInPanel(keyInput);
+        this.el.querySelectorAll('.display-value')[1].textContent = `Key: ${this.key}`;
+        this.flow.updateJSON();
+      });
+      const questionInput = panel.querySelector('#editQuestion');
+      questionInput.addEventListener('input', e => {
+        this.question = e.target.value;
+        this.flow.updateJSON();
+        this.renderDisplay();
+      });
+    } catch (err) {
+      console.error(`Error en createEditorContent para EndBox ${this.id}:`, err);
+    }
   }
-  getEditContent() {
-    let content = super.getEditContent();
-    content += `
-      <div class="box-field">
-        <label>Pregunta</label>
-        <input class="question-text" type="text" value="${this.question}" data-box="${this.id}">
-      </div>
-    `;
-    return content;
+
+  _validateKeyInPanel(input) {
+    const isDuplicate = [...this.flow.boxes.values()].some(b => b !== this && b.key === this.key && this.key);
+    input.classList.toggle('invalid', isDuplicate);
+    input.title = isDuplicate ? 'Clave duplicada' : '';
   }
-  _bindEditEvents() {
-    super._bindEditEvents();
-    const qInput = document.querySelector(`#editContent .question-text[data-box="${this.id}"]`);
-    if (qInput) qInput.addEventListener('input', e => { this.question = e.target.value; this.flow.updateJSON(); });
-  }
+
   serialize() {
     const base = super.serialize();
     base.question = this.question;
     return base;
   }
 }
+
 // Connections
+
 class Connector {
   constructor(flow, id, fromBox, fromAnchor, toBox, toAnchor) {
-    this.flow = flow; this.id = id; this.fromBox = fromBox; this.fromAnchor = fromAnchor;
-    this.toBox = toBox; this.toAnchor = toAnchor;
+    this.flow = flow;
+    this.id = id;
+    this.fromBox = fromBox;
+    this.fromAnchor = fromAnchor;
+    this.toBox = toBox;
+    this.toAnchor = toAnchor;
     this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.path.setAttribute('class', 'conn-line');
     this.flow.svg.appendChild(this.path);
   }
+
   update() {
     const a = this.fromBox.getAnchorPos(this.fromAnchor);
     const b = this.toBox.getAnchorPos(this.toAnchor);
@@ -886,15 +1372,24 @@ class Connector {
       this.path.setAttribute('d', d);
     }
   }
+
   serialize() {
     return {
-      id: this.id, from: this.fromBox.id, fromAnchor: this.fromAnchor,
-      to: this.toBox.id, toAnchor: this.toAnchor
+      id: this.id,
+      from: this.fromBox.id,
+      fromAnchor: this.fromAnchor,
+      to: this.toBox.id,
+      toAnchor: this.toAnchor
     };
   }
-  destroy() { this.path.remove(); }
+
+  destroy() {
+    this.path.remove();
+  }
 }
+
 // Rules
+
 const rules = {
   trigger: ['questions'],
   questions: ['questions', 'decision', 'end'],
@@ -902,6 +1397,7 @@ const rules = {
   flow: ['questions', 'end'],
   end: []
 };
+
 const entradas = {
   trigger: { max: 0, permitidos: {} },
   questions: { max: Infinity, permitidos: { flow: 1, questions: Infinity, trigger: 1 } },
@@ -909,7 +1405,9 @@ const entradas = {
   flow: { max: Infinity, permitidos: { decision: Infinity } },
   end: { max: Infinity, permitidos: { flow: Infinity, questions: Infinity, decision: Infinity } }
 };
+
 // Core: Flowchart
+
 class Flowchart {
   constructor() {
     this.stage = document.getElementById('canvas');
@@ -926,8 +1424,14 @@ class Flowchart {
     this.isPanning = false;
     this.panStartX = 0;
     this.panStartY = 0;
+    this.currentEditingBox = null;
+    this.editorPanel = document.getElementById('editorPanel');
+    if (!this.editorPanel) {
+      console.error('Editor panel no encontrado (#editorPanel)');
+    }
     this._bindEvents();
   }
+
   _bindEvents() {
     document.getElementById('addTrigger').addEventListener('click', () => this.addBox('trigger'));
     document.getElementById('addQuestions').addEventListener('click', () => this.addBox('questions'));
@@ -938,11 +1442,13 @@ class Flowchart {
     document.getElementById('saveFlow').addEventListener('click', () => this.save());
     document.getElementById('loadFlow').addEventListener('click', () => document.getElementById('fileInput').click());
     document.getElementById('fileInput').addEventListener('change', (e) => this.load(e));
+
     this.stage.addEventListener('click', e => {
       const anchor = e.target.closest('.anchor:not(.hidden)');
       if (anchor) {
         const box = this.boxes.get(anchor.dataset.box);
         const pos = anchor.dataset.pos;
+
         if (this.pendingAnchor) {
           for (const conn of this.conns.values()) {
             if ((conn.fromBox === this.pendingAnchor.box && conn.toBox === box) ||
@@ -953,13 +1459,17 @@ class Flowchart {
             }
           }
         }
+
         if (this.pendingAnchor && this.pendingAnchor.box === box && this.pendingAnchor.pos === pos) {
           this.pendingAnchor.el.classList.remove('active-anchor');
           this.pendingAnchor = null;
           return;
         }
+
         if (this.pendingAnchor && this.pendingAnchor.el) this.pendingAnchor.el.classList.remove('active-anchor');
+
         anchor.classList.add('active-anchor');
+
         if (this.pendingAnchor) {
           this.createConn(this.pendingAnchor.box, this.pendingAnchor.pos, box, pos);
           this.pendingAnchor.el.classList.remove('active-anchor');
@@ -970,11 +1480,13 @@ class Flowchart {
         }
         return;
       }
+
       if (this.pendingAnchor) {
         this.pendingAnchor.el.classList.remove('active-anchor');
         this.pendingAnchor = null;
       }
     });
+
     this.stage.parentElement.addEventListener('wheel', e => {
       e.preventDefault();
       const oldZoom = this.zoom;
@@ -987,6 +1499,7 @@ class Flowchart {
       this.updateTransform();
       this.requestUpdate();
     });
+
     this.stage.parentElement.addEventListener('mousedown', e => {
       if (e.button === 2 || e.target.closest('.box, .anchor')) return;
       this.isPanning = true;
@@ -994,6 +1507,7 @@ class Flowchart {
       this.panStartY = e.clientY;
       e.preventDefault();
     });
+
     window.addEventListener('mousemove', e => {
       if (!this.isPanning) return;
       const dx = (e.clientX - this.panStartX) / this.zoom;
@@ -1005,15 +1519,62 @@ class Flowchart {
       this.updateTransform();
       this.requestUpdate();
     });
+
     window.addEventListener('mouseup', () => {
       this.isPanning = false;
     });
+
+    const closeBtn = this.editorPanel.querySelector('.close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        console.log('Botón de cerrar panel clicado');
+        this.closeEditor();
+      });
+    } else {
+      console.warn('Botón de cerrar panel no encontrado');
+    }
   }
+
+  openEditor(box) {
+    console.log(`Abriendo editor para el nodo ${box.id} (${box.type})`);
+    try {
+      this.currentEditingBox = box;
+      const editorContent = this.editorPanel.querySelector('#editorContent');
+      if (editorContent) {
+        box.createEditorContent(editorContent);
+        this.editorPanel.classList.remove('hidden');
+        console.log('Panel de edición mostrado');
+      } else {
+        console.error('Contenedor #editorContent no encontrado');
+      }
+    } catch (err) {
+      console.error(`Error al abrir editor para el nodo ${box.id}:`, err);
+    }
+  }
+
+  closeEditor() {
+    console.log('Cerrando panel de edición');
+    try {
+      this.editorPanel.classList.add('hidden');
+      if (this.currentEditingBox) {
+        this.currentEditingBox.renderDisplay();
+        this.currentEditingBox = null;
+      }
+      const editorContent = this.editorPanel.querySelector('#editorContent');
+      if (editorContent) {
+        editorContent.innerHTML = '';
+      }
+    } catch (err) {
+      console.error('Error al cerrar editor:', err);
+    }
+  }
+
   updateTransform() {
     this.stage.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoom})`;
     this.svg.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoom})`;
   }
-  addBox(type, x=60, y=60, key, title, question = '¿Qué desea?') {
+
+  addBox(type, x=60, y=60, key, title, question, triggers, options, files, steps) {
     if (type === 'trigger' && Array.from(this.boxes.values()).some(b => b.type === 'trigger')) {
       return;
     }
@@ -1024,19 +1585,19 @@ class Flowchart {
     let box;
     switch (type) {
       case 'trigger':
-        box = new TriggerBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`);
+        box = new TriggerBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, triggers);
         break;
       case 'questions':
-        box = new QuestionsBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, question);
+        box = new QuestionsBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, question || '¿Qué desea?', options, files);
         break;
       case 'decision':
-        box = new DecisionBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, question);
+        box = new DecisionBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, question || '¿Qué desea?', options);
         break;
       case 'flow':
-        box = new FlowBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`);
+        box = new FlowBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, steps);
         break;
       case 'end':
-        box = new EndBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, question);
+        box = new EndBox(this, id, x, y, title || defaultTitle, key || `${prefix}_${id.split('_')[1]}`, question || '¿Qué desea?');
         break;
     }
     this.boxes.set(id, box);
@@ -1044,27 +1605,40 @@ class Flowchart {
     this.updateJSON();
     return box;
   }
+
   removeBox(id) {
     const box = this.boxes.get(id);
     if (!box) return;
+
+    const removedConns = [];
     [...this.conns.values()].forEach(conn => {
       if (conn.fromBox === box || conn.toBox === box) {
+        removedConns.push(conn.serialize());
         conn.destroy();
         this.conns.delete(conn.id);
         if (conn.fromBox.type === 'decision' && conn.toBox === box) {
           const index = parseInt(conn.fromAnchor.replace('out', ''));
           if (conn.fromBox.options[index]) {
             conn.fromBox.options[index].flowId = `option${index + 1}`;
-            conn.fromBox.renderBranches();
+            if (this.currentEditingBox === conn.fromBox) {
+              conn.fromBox.renderBranchesInEditor(document.getElementById('editorPanel').querySelector('#editBranches'));
+            } else {
+              conn.fromBox.renderDisplay();
+            }
           }
         }
       }
     });
+
     box.destroy();
     this.boxes.delete(id);
+    if (this.currentEditingBox && this.currentEditingBox.id === id) {
+      this.closeEditor();
+    }
     this.requestUpdate();
     this.updateJSON();
   }
+
   detectCycle(fromBox, toBox, visited = new Set(), path = new Set()) {
     if (!toBox) return false;
     if (path.has(toBox.id)) return true;
@@ -1079,31 +1653,43 @@ class Flowchart {
     }
     return false;
   }
+
   createConn(fromBox, fromAnchor, toBox, toAnchor) {
     if (fromBox === toBox) return;
     if (!fromBox.isOutputAllowed(fromAnchor) || !toBox.isInputAllowed(toAnchor)) return;
     if (!rules[fromBox.type] || !rules[fromBox.type].includes(toBox.type)) return;
+
     const reglaEntrada = entradas[toBox.type];
     if (!reglaEntrada) return;
+
     const maxPorTipo = reglaEntrada.permitidos[fromBox.type];
     if (maxPorTipo === undefined) return;
+
     const count = Array.from(this.conns.values()).filter(c => c.toBox === toBox && c.fromBox.type === fromBox.type).length;
     if (count >= maxPorTipo) return;
+
     if (this.detectCycle(fromBox, toBox)) return;
+
     const id = `c${++this.connCounter}`;
     const conn = new Connector(this, id, fromBox, fromAnchor, toBox, toAnchor);
     this.conns.set(id, conn);
+
     if (fromBox.type === 'decision' && toBox.type === 'flow') {
       const index = parseInt(fromAnchor.replace('out', ''));
       if (fromBox.options[index]) {
         fromBox.options[index].flowId = toBox.id;
-        fromBox.renderBranches();
+        if (this.currentEditingBox === fromBox) {
+          fromBox.renderBranchesInEditor(document.getElementById('editorPanel').querySelector('#editBranches'));
+        } else {
+          fromBox.renderDisplay();
+        }
         fromBox.repositionOutputs();
         this.updateJSON();
       }
     }
+
     if (fromBox.type === 'trigger' || fromBox.type === 'flow') {
-      const steps = fromBox.steps;
+      const steps = fromBox.steps || [];
       let stepCounter = steps.length > 0 ? steps[steps.length - 1].step + 1 : 1;
       if (toBox.type === 'decision') {
         steps.push({ step: stepCounter, ...toBox.serialize() });
@@ -1111,13 +1697,16 @@ class Flowchart {
         steps.push({ step: stepCounter, ...toBox.serialize() });
       }
     }
+
     this.requestUpdate();
     this.updateJSON();
     return conn;
   }
+
   yaAlcanzaEnd(fromBox, endBox) {
     return this.detectCycle(fromBox, endBox);
   }
+
   requestUpdate() {
     if (this._needsUpdate) return;
     this._needsUpdate = true;
@@ -1126,9 +1715,11 @@ class Flowchart {
       this._render();
     });
   }
+
   _render() {
     for (const c of this.conns.values()) c.update();
   }
+
   updateJSON() {
     const stepsMap = new Map();
     this.boxes.forEach(box => {
@@ -1136,12 +1727,14 @@ class Flowchart {
         stepsMap.set(box.id, []);
       }
     });
+
     this.boxes.forEach(triggerBox => {
       if (triggerBox.type !== 'trigger') return;
       const steps = [];
       let currentBox = triggerBox;
       let stepCounter = 1;
       const visited = new Set();
+
       while (currentBox) {
         visited.add(currentBox.id);
         const nextConn = [...this.conns.values()].find(c => c.fromBox === currentBox &&
@@ -1152,14 +1745,17 @@ class Flowchart {
         if (nextBox.type === 'decision') break;
         currentBox = nextBox;
       }
+
       stepsMap.set(triggerBox.id, steps);
     });
+
     this.boxes.forEach(flowBox => {
       if (flowBox.type !== 'flow') return;
       const steps = [];
       let currentBox = flowBox;
       let stepCounter = 1;
       const visited = new Set();
+
       while (currentBox) {
         visited.add(currentBox.id);
         const nextConn = [...this.conns.values()].find(c => c.fromBox === currentBox &&
@@ -1169,17 +1765,21 @@ class Flowchart {
         steps.push({ step: stepCounter++, ...nextBox.serialize() });
         currentBox = nextBox;
       }
+
       stepsMap.set(flowBox.id, steps);
     });
+
     this.boxes.forEach(box => {
       if (box.type === 'trigger' || box.type === 'flow') {
         box.steps = stepsMap.get(box.id) || [];
       }
     });
+
     const allStepIds = new Set();
     stepsMap.forEach(steps => {
       steps.forEach(step => allStepIds.add(step.id));
     });
+
     const data = {
       boxes: [...this.boxes.values()]
         .filter(b => !allStepIds.has(b.id) || b.type === 'trigger' || b.type === 'flow' || b.type === 'decision')
@@ -1189,8 +1789,10 @@ class Flowchart {
       panX: this.panX,
       panY: this.panY
     };
+
     document.getElementById('jsonView').textContent = JSON.stringify(data, null, 2);
   }
+
   serialize() {
     return {
       boxes: [...this.boxes.values()].map(b => b.serialize()),
@@ -1202,6 +1804,7 @@ class Flowchart {
       connCounter: this.connCounter
     };
   }
+
   deserialize(data) {
     this.clear(false);
     this.zoom = data.zoom || 1;
@@ -1209,40 +1812,38 @@ class Flowchart {
     this.panY = data.panY || 0;
     this.boxCounter = data.boxCounter || 0;
     this.connCounter = data.connCounter || 0;
+
     data.boxes.forEach(b => {
       let box;
       switch (b.type) {
         case 'trigger':
-          box = new TriggerBox(this, b.id, b.x, b.y, b.title, b.key);
-          box.triggers = b.triggers || [];
+          box = new TriggerBox(this, b.id, b.x, b.y, b.title, b.key, b.triggers || []);
           box.steps = b.steps || [];
           break;
         case 'questions':
-          box = new QuestionsBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?');
-          box.options = Object.entries(b.options || {}).map(([key, keywords]) => ({ key, keywords }));
-          box.files = b.files || [];
+          box = new QuestionsBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?', Object.entries(b.options || {}).map(([key, keywords]) => ({ key, keywords })), b.files || []);
           break;
         case 'decision':
-          box = new DecisionBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?');
-          box.options = Object.entries(b.options || {}).map(([flowId, keywords]) => ({ flowId, keywords }));
-          box.options.forEach((_, i) => {
+          box = new DecisionBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?', Object.entries(b.options || {}).map(([flowId, keywords]) => ({ flowId, keywords })));
+          (b.options || []).forEach((_, i) => {
             const pos = `out${i}`;
             if (!box.anchors[pos]) box.addAnchor(pos);
           });
-          box.h = 70 + (box.options.length * 25);
+          box.repositionOutputs();
+          box.h = 70 + ((b.options || []).length * 25);
           box.el.style.minHeight = `${box.h}px`;
           break;
         case 'flow':
-          box = new FlowBox(this, b.id, b.x, b.y, b.title, b.key);
-          box.steps = b.steps || [];
+          box = new FlowBox(this, b.id, b.x, b.y, b.title, b.key, b.steps || []);
           break;
         case 'end':
           box = new EndBox(this, b.id, b.x, b.y, b.title, b.key, b.question || '¿Qué desea?');
           break;
       }
-      if (box._validateKey) box._validateKey();
       this.boxes.set(b.id, box);
+      box.renderDisplay();
     });
+
     data.conns.forEach(c => {
       const fromBox = this.boxes.get(c.from);
       const toBox = this.boxes.get(c.to);
@@ -1251,10 +1852,12 @@ class Flowchart {
         this.conns.set(c.id, conn);
       }
     });
+
     this.updateTransform();
     this.requestUpdate();
     this.updateJSON();
   }
+
   save() {
     const data = this.serialize();
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -1265,6 +1868,7 @@ class Flowchart {
     a.click();
     URL.revokeObjectURL(url);
   }
+
   load(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -1280,7 +1884,8 @@ class Flowchart {
     reader.readAsText(file);
     e.target.value = '';
   }
-  clear(pushToHistory = true) {
+
+  clear() {
     for (const b of this.boxes.values()) b.destroy();
     this.boxes.clear();
     for (const c of this.conns.values()) c.destroy();
@@ -1294,6 +1899,7 @@ class Flowchart {
     this.updateJSON();
   }
 }
+
 const FLOW = new Flowchart();
 </script>
 </body>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat UI</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f2f5;
+    }
+    .chat-container {
+      width: 100%;
+      max-width: 400px;
+      height: 80vh;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      border-bottom: 1px solid #eee;
+    }
+    .message {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 70%;
+      word-wrap: break-word;
+    }
+    .bot-message {
+      background: #e6f3ff;
+      margin-right: 10px;
+    }
+    .user-message {
+      background: #007bff;
+      color: white;
+      margin-left: auto;
+      margin-right: 10px;
+    }
+    .input-container {
+      display: flex;
+      padding: 10px;
+      background: #fff;
+    }
+    #userInput {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      outline: none;
+    }
+    #sendButton {
+      padding: 10px 20px;
+      margin-left: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #sendButton:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="input-container">
+      <input type="text" id="userInput" placeholder="Escribe tu mensaje..." onkeypress="if(event.key === 'Enter') sendMessage()">
+      <button id="sendButton" onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    const flowData = {
+      "boxes": [
+        {
+          "id": "trigger_1758732037836",
+          "type": "trigger",
+          "triggers": ["hola", "hello"],
+          "steps": [
+            {
+              "step": 1,
+              "id": "question_1758732042148",
+              "type": "questions",
+              "key": "name",
+              "options": {},
+              "question": "¿Hola, cómo te llamas?"
+            },
+            {
+              "step": 2,
+              "id": "question_1758732108924",
+              "type": "questions",
+              "key": "phone",
+              "options": {},
+              "question": "¿Ok {{name}}, cuál es tu número de teléfono?"
+            },
+            {
+              "step": 3,
+              "id": "decision_1758732192212",
+              "type": "decision",
+              "key": "menu",
+              "question": "{{name}} tenemos tacos y pizza",
+              "options": {
+                "flow_1758732249244": ["1", "pizza"],
+                "flow_1758732275476": ["2", "tacos"]
+              }
+            }
+          ]
+        },
+        {
+          "id": "flow_1758732249244",
+          "type": "flow",
+          "steps": [
+            {
+              "step": 1,
+              "id": "question_1758732313452",
+              "type": "questions",
+              "key": "TypePizza",
+              "options": {
+                "con queso": ["1", "con queso"],
+                "sin queso": ["2", "sin queso"],
+                "con carne": ["3", "con carne"]
+              },
+              "question": "¿Cómo quieres la pizza, {{name}}?"
+            },
+            {
+              "step": 2,
+              "id": "end_1758732662820",
+              "type": "end",
+              "question": "Ok {{name}}, su número de teléfono es {{phone}}, del menú usted eligió {{menu}} y el tipo de pizza que desea es {{TypePizza}}. Su pedido se está preparando."
+            }
+          ]
+        },
+        {
+          "id": "flow_1758732275476",
+          "type": "flow",
+          "steps": [
+            {
+              "step": 1,
+              "id": "question_1758732318924",
+              "type": "questions",
+              "key": "TypeTaco",
+              "options": {
+                "grande": ["1", "grande"],
+                "pequeño": ["2", "pequeño"],
+                "extra grande": ["3", "extra grande", "extra"]
+              },
+              "question": "¿Qué tamaño de tacos desea, {{name}}?"
+            },
+            {
+              "step": 2,
+              "id": "end_1758732684700",
+              "type": "end",
+              "question": "Ok {{name}}, su número de teléfono es {{phone}}, del menú usted eligió {{menu}} y el tipo de tacos que desea es {{TypeTaco}}. Su pedido se está preparando."
+            }
+          ]
+        }
+      ],
+      "conns": [
+        {
+          "from": "trigger_1758732037836",
+          "to": "question_1758732042148"
+        },
+        {
+          "from": "question_1758732042148",
+          "to": "question_1758732108924"
+        },
+        {
+          "from": "question_1758732108924",
+          "to": "decision_1758732192212"
+        },
+        {
+          "from": "decision_1758732192212",
+          "to": "flow_1758732249244"
+        },
+        {
+          "from": "decision_1758732192212",
+          "to": "flow_1758732275476"
+        },
+        {
+          "from": "flow_1758732249244",
+          "to": "question_1758732313452"
+        },
+        {
+          "from": "question_1758732313452",
+          "to": "end_1758732662820"
+        },
+        {
+          "from": "flow_1758732275476",
+          "to": "question_1758732318924"
+        },
+        {
+          "from": "question_1758732318924",
+          "to": "end_1758732684700"
+        }
+      ]
+    };
+
+    class ChatManager {
+      constructor(flowData) {
+        this.flowData = flowData;
+        this.userData = {};
+        this.currentBox = null;
+        this.currentStep = null;
+        this.sessionId = null;
+        this.flowStack = [];
+      }
+
+      attach(sessionId, message) {
+        this.sessionId = sessionId;
+        message = message.toLowerCase().trim();
+
+        if (!this.currentBox) {
+          this.startFlow(message);
+        } else {
+          this.processMessage(message);
+        }
+      }
+
+      startFlow(message) {
+        const triggerBox = this.flowData.boxes.find(box => 
+          box.type === "trigger" && box.triggers.includes(message)
+        );
+        if (triggerBox && triggerBox.steps.length > 0) {
+          this.currentBox = triggerBox;
+          this.currentStep = triggerBox.steps[0];
+          this.flowStack.push({ box: triggerBox, stepIndex: 0 });
+          this.displayQuestion(this.currentStep);
+        } else {
+          this.displayMessage("Por favor, di 'hola' o 'hello' para comenzar.", 'bot');
+        }
+      }
+
+      processMessage(message) {
+        this.displayMessage(message, 'user');
+
+        if (this.currentStep.type === "questions") {
+          if (Object.keys(this.currentStep.options).length > 0) {
+            const option = Object.entries(this.currentStep.options).find(([_, values]) => 
+              values.includes(message)
+            );
+            if (option) {
+              this.userData[this.currentStep.key] = option[1][1];
+              this.moveToNextStep();
+            } else {
+              const optionsText = Object.entries(this.currentStep.options)
+                .map(([_, values]) => `${values[0]}: ${values[1]}`)
+                .join(", ");
+              this.displayMessage(`Opción inválida. Por favor, elige: ${optionsText}`, 'bot');
+            }
+          } else {
+            this.userData[this.currentStep.key] = message;
+            this.moveToNextStep();
+          }
+        } else if (this.currentStep.type === "decision") {
+          if (Object.keys(this.currentStep.options).length === 0) {
+            this.displayMessage("Error: No hay opciones disponibles para esta decisión.", 'bot');
+            this.reset();
+            return;
+          }
+          const option = Object.entries(this.currentStep.options).find(([_, values]) => 
+            values.includes(message)
+          );
+          if (option) {
+            this.userData[this.currentStep.key] = option[1][1];
+            const nextBoxId = option[0];
+            const nextBox = this.flowData.boxes.find(box => box.id === nextBoxId);
+            if (nextBox && nextBox.type === "flow" && nextBox.steps.length > 0) {
+              this.currentBox = nextBox;
+              this.currentStep = nextBox.steps[0];
+              this.flowStack.push({ box: nextBox, stepIndex: 0 });
+              this.displayQuestion(this.currentStep);
+            } else {
+              this.displayMessage("Error: No se encontró el flujo siguiente.", 'bot');
+              this.reset();
+            }
+          } else {
+            const optionsText = Object.entries(this.currentStep.options)
+              .map(([_, values]) => `${values[0]}: ${values[1]}`)
+              .join(", ");
+            this.displayMessage(`Opción inválida. Por favor, elige: ${optionsText}`, 'bot');
+          }
+        }
+      }
+
+      moveToNextStep() {
+        const currentIndex = this.flowStack[this.flowStack.length - 1].stepIndex;
+        const nextStepIndex = currentIndex + 1;
+
+        if (nextStepIndex < this.currentBox.steps.length) {
+          this.flowStack[this.flowStack.length - 1].stepIndex = nextStepIndex;
+          this.currentStep = this.currentBox.steps[nextStepIndex];
+          if (this.currentStep.type === "end") {
+            this.displayMessage(this.renderMessage(this.currentStep.question), 'bot');
+            this.reset();
+          } else {
+            this.displayQuestion(this.currentStep);
+          }
+        } else {
+          this.reset();
+        }
+      }
+
+      displayQuestion(step) {
+        let message = this.renderMessage(step.question || "");
+        if ((step.type === "questions" && Object.keys(step.options).length > 0) || step.type === "decision") {
+          if (Object.keys(step.options).length === 0 && step.type === "decision") {
+            this.displayMessage("Error: No hay opciones disponibles para esta decisión.", 'bot');
+            this.reset();
+            return;
+          }
+          const optionsText = Object.entries(step.options)
+            .map(([_, values]) => `${values[0]}: ${values[1]}`)
+            .join(", ");
+          message += (message ? " " : "") + `Por favor, elige: ${optionsText}`;
+        }
+        this.displayMessage(message, 'bot');
+      }
+
+      renderMessage(message) {
+        if (!message) return "";
+        return message.replace(/{{(\w+)}}/g, (_, key) => this.userData[key] || '');
+      }
+
+      reset() {
+        this.currentBox = null;
+        this.currentStep = null;
+        this.flowStack = [];
+        this.displayMessage("Por favor, di 'hola' o 'hello' para comenzar.", 'bot');
+      }
+
+      displayMessage(text, sender) {
+        const chatMessages = document.getElementById('chatMessages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender === 'bot' ? 'bot-message' : 'user-message'}`;
+        messageDiv.textContent = text;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+
+    const manager = new ChatManager(flowData);
+
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+      manager.attach('50434210510', text);
+      input.value = '';
+    }
+  </script>
+</body>
+</html>
