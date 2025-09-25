@@ -64,7 +64,6 @@ button:active {
   width: 3000px;
   height: 3000px;
   position: relative;
-  transform-origin: 0 0;
 }
 .box {
   position: absolute;
@@ -502,8 +501,8 @@ class BaseBox {
     });
     window.addEventListener('mousemove', e => {
       if (!dragging) return;
-      this.x = origX + (e.clientX - startX) / this.flow.zoom;
-      this.y = origY + (e.clientY - startY) / this.flow.zoom;
+      this.x = origX + (e.clientX - startX);
+      this.y = origY + (e.clientY - startY);
       this.updatePosition();
       this.flow.requestUpdate();
     });
@@ -520,8 +519,8 @@ class BaseBox {
     const rect = anchorEl.getBoundingClientRect();
     const canvasRect = this.flow.stage.getBoundingClientRect();
     return {
-      x: (rect.left + rect.width / 2 - canvasRect.left) / this.flow.zoom - this.flow.panX,
-      y: (rect.top + rect.height / 2 - canvasRect.top) / this.flow.zoom - this.flow.panY
+      x: (rect.left + rect.width / 2 - canvasRect.left) - this.flow.panX,
+      y: (rect.top + rect.height / 2 - canvasRect.top) - this.flow.panY
     };
   }
   updatePosition() {
@@ -962,7 +961,6 @@ class Flowchart {
     this.connCounter = 0;
     this.pendingAnchor = null;
     this._needsUpdate = false;
-    this.zoom = 1;
     this.panX = 0;
     this.panY = 0;
     this.isPanning = false;
@@ -1017,18 +1015,6 @@ class Flowchart {
         this.pendingAnchor = null;
       }
     });
-    this.stage.parentElement.addEventListener('wheel', e => {
-      e.preventDefault();
-      const oldZoom = this.zoom;
-      this.zoom = Math.max(0.5, Math.min(2, this.zoom - e.deltaY * 0.001));
-      const rect = this.stage.parentElement.getBoundingClientRect();
-      const mouseX = e.clientX - rect.left;
-      const mouseY = e.clientY - rect.top;
-      this.panX += (mouseX / oldZoom) - (mouseX / this.zoom);
-      this.panY += (mouseY / oldZoom) - (mouseY / this.zoom);
-      this.updateTransform();
-      this.requestUpdate();
-    });
     this.stage.parentElement.addEventListener('mousedown', e => {
       if (e.button === 2 || e.target.closest('.box, .anchor')) return;
       this.isPanning = true;
@@ -1038,8 +1024,8 @@ class Flowchart {
     });
     window.addEventListener('mousemove', e => {
       if (!this.isPanning) return;
-      const dx = (e.clientX - this.panStartX) / this.zoom;
-      const dy = (e.clientY - this.panStartY) / this.zoom;
+      const dx = e.clientX - this.panStartX;
+      const dy = e.clientY - this.panStartY;
       this.panX += dx;
       this.panY += dy;
       this.panStartX = e.clientX;
@@ -1052,8 +1038,8 @@ class Flowchart {
     });
   }
   updateTransform() {
-    this.stage.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoom})`;
-    this.svg.style.transform = `translate(${this.panX}px, ${this.panY}px) scale(${this.zoom})`;
+    this.stage.style.transform = `translate(${this.panX}px, ${this.panY}px)`;
+    this.svg.style.transform = `translate(${this.panX}px, ${this.panY}px)`;
   }
   addBox(type, x=60, y=60, key, title, question = '¿Qué desea?') {
     if (type === 'trigger' && Array.from(this.boxes.values()).some(b => b.type === 'trigger')) {
@@ -1227,7 +1213,6 @@ class Flowchart {
         .filter(b => !allStepIds.has(b.id) || b.type === 'trigger' || b.type === 'flow' || b.type === 'decision')
         .map(b => b.serialize()),
       conns: [...this.conns.values()].map(c => c.serialize()),
-      zoom: this.zoom,
       panX: this.panX,
       panY: this.panY
     };
@@ -1237,7 +1222,6 @@ class Flowchart {
     return {
       boxes: [...this.boxes.values()].map(b => b.serialize()),
       conns: [...this.conns.values()].map(c => c.serialize()),
-      zoom: this.zoom,
       panX: this.panX,
       panY: this.panY,
       boxCounter: this.boxCounter,
@@ -1246,7 +1230,6 @@ class Flowchart {
   }
   deserialize(data) {
     this.clear(false);
-    this.zoom = data.zoom || 1;
     this.panX = data.panX || 0;
     this.panY = data.panY || 0;
     this.boxCounter = data.boxCounter || 0;
@@ -1334,7 +1317,6 @@ class Flowchart {
     this.conns.clear();
     this.boxCounter = 0;
     this.connCounter = 0;
-    this.zoom = 1;
     this.panX = 0;
     this.panY = 0;
     this.updateTransform();
@@ -1345,5 +1327,3 @@ const FLOW = new Flowchart();
 </script>
 </body>
 </html>
-
-VERIIFCAR BIEN ESTO AQUI YA LA QUESTION SE SOLUCIONA PERO EL ZOOM ESTA AFECTANDO

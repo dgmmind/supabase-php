@@ -1,260 +1,496 @@
 {
-    "boxes": [
-      {
-        "id": "trigger_1758669080534",
-        "type": "trigger",
-        "x": 60,
-        "y": 60,
-        "w": 140,
-        "h": 70,
-        "title": "Trigger 1",
-        "triggers": [
-          "hola",
-          "hello"
-        ],
-        "steps": [
-          {
-            "step": 1,
-            "id": "question_1758669088200",
-            "type": "questions",
-            "x": 15,
-            "y": 328,
-            "w": 140,
-            "h": 70,
-            "title": "Questions 2",
-            "options": {
-              "cafe": [
-                "cafe",
-                "coffee",
-                "cafes"
-              ],
-              "latte": [
-                "latte",
-                "latte coffee"
-              ],
-              "americano": [
-                "americano",
-                "american coffee"
-              ],
-              "cappuccino": [
-                "cappuccino",
-                "cappucino"
-              ]
-            },
-            "question": "¿Qué bebida desea?",
-            "key": "bebida"
+  "boxes": [
+    {
+      "id": "trigger_1",
+      "type": "trigger",
+      "x": 29,
+      "y": 21,
+      "w": 140,
+      "h": 70,
+      "title": "Trigger Inicio",
+      "key": "trigger_1",
+      "triggers": [
+        "hola",
+        "buenas"
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_name",
+          "type": "questions",
+          "x": 280,
+          "y": 22,
+          "w": 180,
+          "h": 70,
+          "title": "Pregunta Nombre",
+          "key": "question_name",
+          "options": {},
+          "question": "¿Cuál es tu nombre?"
+        },
+        {
+          "step": 2,
+          "id": "question_menu",
+          "type": "questions",
+          "x": 54,
+          "y": 419,
+          "w": 200,
+          "h": 70,
+          "title": "Pregunta Menú",
+          "key": "question_menu",
+          "options": {
+            "pizza": [
+              "pizza",
+              "pizzas"
+            ]
           },
-          {
-            "step": 2,
-            "id": "question_1758669226704",
-            "type": "questions",
-            "x": 114,
-            "y": 484,
-            "w": 140,
-            "h": 70,
-            "title": "Questions 3",
-            "options": {
-              "cafe": [
-                "cafe",
-                "coffee",
-                "cafes"
-              ],
-              "latte": [
-                "latte",
-                "latte coffee"
-              ],
-              "americano": [
-                "americano",
-                "american coffee"
-              ],
-              "cappuccino": [
-                "cappuccino",
-                "cappucino"
-              ]
-            },
-            "question": "¿Qué bebida desea?",
-            "key": "bebida"
-          },
-          {
-            "step": 3,
-            "id": "decision_1758669236025",
-            "type": "decision",
-            "x": 57,
-            "y": 116,
-            "w": 140,
-            "h": 120,
-            "title": "Decision 4",
-            "options": {
-              "cafe": [],
-              "flow_1758669293472": []
-            }
+          "question": "Ok {nombre}, tenemos Pizza, Hamburguesa, Sopas y Tacos. ¿Qué deseas?"
+        },
+        {
+          "step": 3,
+          "id": "decision_menu",
+          "type": "decision",
+          "x": 587,
+          "y": 367,
+          "w": 180,
+          "h": 200,
+          "title": "Decision Menú",
+          "key": "decision_menu",
+          "options": {
+            "flow_pizza": [
+              "pizza"
+            ],
+            "flow_hamburguesa": [
+              "hamburguesa"
+            ],
+            "flow_sopa": [
+              "sopa"
+            ],
+            "flow_tacos": [
+              "tacos"
+            ]
           }
-        ]
-      },
-      {
-        "id": "decision_1758669236025",
-        "type": "decision",
-        "x": 57,
-        "y": 116,
-        "w": 140,
-        "h": 120,
-        "title": "Decision 4",
-        "options": {
-          "cafe": [],
-          "flow_1758669293472": []
         }
-      },
-      {
-        "id": "flow_1758669272704",
-        "type": "flow",
-        "x": 659,
-        "y": 51,
-        "w": 140,
-        "h": 70,
-        "title": "Flow 5",
-        "steps": [
-          {
-            "step": 1,
-            "id": "question_1758669557288",
-            "type": "questions",
-            "x": 816,
-            "y": 26,
-            "w": 140,
-            "h": 70,
-            "title": "Questions 7",
-            "options": {
-              "cafe": [
-                "cafe",
-                "coffee",
-                "cafes"
-              ],
-              "latte": [
-                "latte",
-                "latte coffee"
-              ],
-              "americano": [
-                "americano",
-                "american coffee"
-              ],
-              "cappuccino": [
-                "cappuccino",
-                "cappucino"
-              ]
-            },
-            "question": "¿Qué bebida desea?",
-            "key": "bebida"
+      ]
+    },
+    {
+      "id": "flow_pizza",
+      "type": "flow",
+      "x": 1026,
+      "y": 270,
+      "w": 160,
+      "h": 70,
+      "title": "Flow Pizza",
+      "key": "flow_pizza",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_pizza_size",
+          "type": "questions",
+          "x": 1262,
+          "y": 110,
+          "w": 200,
+          "h": 70,
+          "title": "Tamaño Pizza",
+          "key": "question_pizza_size",
+          "options": {
+            "pequeña": [
+              "pequeña",
+              "chica"
+            ]
           },
-          {
-            "step": 2,
-            "id": "end_1758669580745",
-            "type": "end",
-            "x": 1438,
-            "y": 252,
-            "w": 140,
-            "h": 70,
-            "title": "End 9"
-          }
-        ]
-      },
-      {
-        "id": "flow_1758669293472",
-        "type": "flow",
-        "x": 643,
-        "y": 324,
-        "w": 140,
-        "h": 70,
-        "title": "Flow 6",
-        "steps": [
-          {
-            "step": 1,
-            "id": "question_1758669560320",
-            "type": "questions",
-            "x": 823,
-            "y": 368,
-            "w": 140,
-            "h": 70,
-            "title": "Questions 8",
-            "options": {
-              "cafe": [
-                "cafe",
-                "coffee",
-                "cafes"
-              ],
-              "latte": [
-                "latte",
-                "latte coffee"
-              ],
-              "americano": [
-                "americano",
-                "american coffee"
-              ],
-              "cappuccino": [
-                "cappuccino",
-                "cappucino"
-              ]
-            },
-            "question": "¿Qué bebida desea?",
-            "key": "bebida"
-          }
+          "question": "¿Qué tamaño de pizza deseas?"
+        },
+        {
+          "step": 2,
+          "id": "question_pizza_type",
+          "type": "questions",
+          "x": 1800,
+          "y": 106,
+          "w": 200,
+          "h": 70,
+          "title": "Tipo Pizza",
+          "key": "question_pizza_type",
+          "options": {
+            "hawaiana": [
+              "hawaiana"
+            ]
+          },
+          "question": "¿Qué tipo de pizza deseas?"
+        },
+        {
+          "step": 3,
+          "id": "end_pizza",
+          "type": "end",
+          "x": 2347,
+          "y": 139,
+          "w": 140,
+          "h": 70,
+          "title": "Fin Pizza",
+          "key": "end_pizza",
+          "question": "¡Perfecto! Tu pizza está en preparación 🍕"
+        }
+      ]
+    },
+    {
+      "id": "flow_hamburguesa",
+      "type": "flow",
+      "x": 1024,
+      "y": 420,
+      "w": 180,
+      "h": 70,
+      "title": "Flow Hamburguesa",
+      "key": "flow_hamburguesa",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_burger_type",
+          "type": "questions",
+          "x": 1260,
+          "y": 345,
+          "w": 220,
+          "h": 70,
+          "title": "Tipo Hamburguesa",
+          "key": "question_burger_type",
+          "options": {
+            "clasica": [
+              "clásica",
+              "sencilla"
+            ]
+          },
+          "question": "¿Qué tipo de hamburguesa deseas?"
+        },
+        {
+          "step": 2,
+          "id": "question_burger_side",
+          "type": "questions",
+          "x": 1801,
+          "y": 345,
+          "w": 220,
+          "h": 70,
+          "title": "Acompañamiento",
+          "key": "question_burger_side",
+          "options": {
+            "papas": [
+              "papas",
+              "fritas"
+            ]
+          },
+          "question": "¿Quieres papas fritas o ensalada como acompañamiento?"
+        },
+        {
+          "step": 3,
+          "id": "end_hamburguesa",
+          "type": "end",
+          "x": 2358,
+          "y": 380,
+          "w": 200,
+          "h": 70,
+          "title": "Fin Hamburguesa",
+          "key": "end_hamburguesa",
+          "question": "¡Excelente! Tu hamburguesa estará lista 🍔"
+        }
+      ]
+    },
+    {
+      "id": "flow_sopa",
+      "type": "flow",
+      "x": 1024,
+      "y": 548,
+      "w": 160,
+      "h": 70,
+      "title": "Flow Sopas",
+      "key": "flow_sopa",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_soup_type",
+          "type": "questions",
+          "x": 1260,
+          "y": 576,
+          "w": 220,
+          "h": 70,
+          "title": "Tipo Sopa",
+          "key": "question_soup_type",
+          "options": {
+            "pollo": [
+              "pollo"
+            ]
+          },
+          "question": "¿Qué tipo de sopa deseas?"
+        },
+        {
+          "step": 2,
+          "id": "question_soup_size",
+          "type": "questions",
+          "x": 1803,
+          "y": 578,
+          "w": 220,
+          "h": 70,
+          "title": "Tamaño Sopa",
+          "key": "question_soup_size",
+          "options": {
+            "pequeña": [
+              "pequeña",
+              "chica"
+            ]
+          },
+          "question": "¿Qué tamaño deseas?"
+        },
+        {
+          "step": 3,
+          "id": "end_sopa",
+          "type": "end",
+          "x": 2368,
+          "y": 613,
+          "w": 200,
+          "h": 70,
+          "title": "Fin Sopa",
+          "key": "end_sopa",
+          "question": "¡Genial! Tu sopa estará lista 🍲"
+        }
+      ]
+    },
+    {
+      "id": "flow_tacos",
+      "type": "flow",
+      "x": 1023,
+      "y": 686,
+      "w": 160,
+      "h": 70,
+      "title": "Flow Tacos",
+      "key": "flow_tacos",
+      "steps": [
+        {
+          "step": 1,
+          "id": "question_taco_type",
+          "type": "questions",
+          "x": 1259,
+          "y": 811,
+          "w": 220,
+          "h": 70,
+          "title": "Tipo Taco",
+          "key": "question_taco_type",
+          "options": {
+            "pastor": [
+              "al pastor"
+            ],
+            "pollo": [
+              "pollo"
+            ]
+          },
+          "question": "¿Qué tipo de tacos deseas?"
+        },
+        {
+          "step": 2,
+          "id": "question_taco_quantity",
+          "type": "questions",
+          "x": 1806,
+          "y": 826,
+          "w": 220,
+          "h": 70,
+          "title": "Cantidad Tacos",
+          "key": "question_taco_quantity",
+          "options": {
+            "2": [
+              "2",
+              "dos"
+            ]
+          },
+          "question": "¿Cuántos tacos quieres?"
+        },
+        {
+          "step": 3,
+          "id": "end_tacos",
+          "type": "end",
+          "x": 2377,
+          "y": 852,
+          "w": 200,
+          "h": 70,
+          "title": "Fin Tacos",
+          "key": "end_tacos",
+          "question": "¡Listo! Tus tacos estarán en camino 🌮"
+        }
+      ]
+    },
+    {
+      "id": "decision_menu",
+      "type": "decision",
+      "x": 587,
+      "y": 367,
+      "w": 180,
+      "h": 200,
+      "title": "Decision Menú",
+      "key": "decision_menu",
+      "options": {
+        "flow_pizza": [
+          "pizza"
+        ],
+        "flow_hamburguesa": [
+          "hamburguesa"
+        ],
+        "flow_sopa": [
+          "sopa"
+        ],
+        "flow_tacos": [
+          "tacos"
         ]
       }
-    ],
-    "conns": [
-      {
-        "id": "c1",
-        "from": "trigger_1758669080534",
-        "fromAnchor": "right",
-        "to": "question_1758669088200",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c2",
-        "from": "question_1758669088200",
-        "fromAnchor": "right",
-        "to": "question_1758669226704",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c3",
-        "from": "question_1758669226704",
-        "fromAnchor": "right",
-        "to": "decision_1758669236025",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c4",
-        "from": "decision_1758669236025",
-        "fromAnchor": "out0",
-        "to": "flow_1758669272704",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c5",
-        "from": "decision_1758669236025",
-        "fromAnchor": "out1",
-        "to": "flow_1758669293472",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c6",
-        "from": "flow_1758669272704",
-        "fromAnchor": "right",
-        "to": "question_1758669557288",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c7",
-        "from": "flow_1758669293472",
-        "fromAnchor": "right",
-        "to": "question_1758669560320",
-        "toAnchor": "left"
-      },
-      {
-        "id": "c8",
-        "from": "question_1758669557288",
-        "fromAnchor": "right",
-        "to": "end_1758669580745",
-        "toAnchor": "left"
-      }
-    ]
-  }
+    }
+  ],
+  "conns": [
+    {
+      "id": "c1",
+      "from": "trigger_1",
+      "fromAnchor": "right",
+      "to": "question_name",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c2",
+      "from": "question_name",
+      "fromAnchor": "right",
+      "to": "question_menu",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c3",
+      "from": "question_menu",
+      "fromAnchor": "right",
+      "to": "decision_menu",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c4",
+      "from": "decision_menu",
+      "fromAnchor": "out0",
+      "to": "flow_pizza",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c5",
+      "from": "decision_menu",
+      "fromAnchor": "out1",
+      "to": "flow_hamburguesa",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c6",
+      "from": "decision_menu",
+      "fromAnchor": "out2",
+      "to": "flow_sopa",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c7",
+      "from": "decision_menu",
+      "fromAnchor": "out3",
+      "to": "flow_tacos",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c8",
+      "from": "trigger_1",
+      "fromAnchor": "right",
+      "to": "question_name",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c9",
+      "from": "question_name",
+      "fromAnchor": "right",
+      "to": "question_menu",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c10",
+      "from": "question_menu",
+      "fromAnchor": "right",
+      "to": "decision_menu",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c11",
+      "from": "flow_pizza",
+      "fromAnchor": "right",
+      "to": "question_pizza_size",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c12",
+      "from": "question_pizza_size",
+      "fromAnchor": "right",
+      "to": "question_pizza_type",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c13",
+      "from": "question_pizza_type",
+      "fromAnchor": "right",
+      "to": "end_pizza",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c14",
+      "from": "flow_hamburguesa",
+      "fromAnchor": "right",
+      "to": "question_burger_type",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c15",
+      "from": "question_burger_type",
+      "fromAnchor": "right",
+      "to": "question_burger_side",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c16",
+      "from": "question_burger_side",
+      "fromAnchor": "right",
+      "to": "end_hamburguesa",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c17",
+      "from": "flow_sopa",
+      "fromAnchor": "right",
+      "to": "question_soup_type",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c18",
+      "from": "question_soup_type",
+      "fromAnchor": "right",
+      "to": "question_soup_size",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c19",
+      "from": "question_soup_size",
+      "fromAnchor": "right",
+      "to": "end_sopa",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c20",
+      "from": "flow_tacos",
+      "fromAnchor": "right",
+      "to": "question_taco_type",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c21",
+      "from": "question_taco_type",
+      "fromAnchor": "right",
+      "to": "question_taco_quantity",
+      "toAnchor": "left"
+    },
+    {
+      "id": "c22",
+      "from": "question_taco_quantity",
+      "fromAnchor": "right",
+      "to": "end_tacos",
+      "toAnchor": "left"
+    }
+  ]
+}
