@@ -65,3 +65,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Dispatch the request
 $router->dispatch($uri, $method);
+
+
+
