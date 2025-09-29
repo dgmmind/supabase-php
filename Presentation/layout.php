@@ -10,11 +10,11 @@
     <!-- Navegación -->
     <nav>
         <div>
-            <a href="/supabase">Sistema de Usuarios</a>
+            <a href="/supabase-php">Sistema de Usuarios</a>
             <ul>
-                <li><a href="/supabase">Inicio</a></li>
-                <li><a href="/supabase/users">Usuarios</a></li>
-                <li><a href="/supabase/users/create">Nuevo Usuario</a></li>
+                <li><a href="/supabase-php">Inicio</a></li>
+                <li><a href="/supabase-php/users">Usuarios</a></li>
+                <li><a href="/supabase-php/users/create">Nuevo Usuario</a></li>
             </ul>
         </div>
     </nav>
@@ -46,9 +46,9 @@
             <div>
                 <p>&copy; <?= date('Y') ?> Sistema de Usuarios con Supabase. Desarrollado con PHP y Clean Architecture.</p>
                 <p>
-                    <a href="/supabase/users">Gestión de Usuarios</a>
+                    <a href="/supabase-php/users">Gestión de Usuarios</a>
                     |
-                    <a href="/supabase/users/create">Crear Usuario</a>
+                    <a href="/supabase-php/users/create">Crear Usuario</a>
                 </p>
             </div>
         </div>

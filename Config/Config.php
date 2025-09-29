@@ -35,7 +35,7 @@ define('SUPABASE_KEY', $_ENV['SUPABASE_KEY'] ?? '');
 
 // Configuración de la aplicación
 define('APP_NAME', 'Sistema de Gestión de Usuarios');
-define('APP_URL', 'http://localhost/supabase');
+define('APP_URL', 'http://localhost/supabase-php/');
 
 // Configuración de la base de datos (si es necesario)
 define('DB_HOST', 'localhost');

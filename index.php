@@ -13,6 +13,9 @@ use Repositories\SupabaseUserRepository;
 use Services\UserService;
 use Controllers\HomeController;
 use Controllers\UserController;
+use Controllers\RoleController;
+use Services\RoleService;
+use Repositories\SupabaseRoleRepository;
 
 // Crear instancia del cliente Supabase
 $client = new SupabaseClient(SUPABASE_URL, SUPABASE_KEY);
@@ -27,9 +30,14 @@ $container = [];
 $container['userRepository'] = new SupabaseUserRepository($client);
 $container['userService'] = new UserService($container['userRepository']);
 
+$container['roleRepository'] = new SupabaseRoleRepository($client);
+$container['roleService'] = new RoleService($container['roleRepository']);
+
 // Crear controladores con dependencias
 $homeController = new HomeController($viewRenderer);
 $userController = new UserController($viewRenderer, $container['userService']);
+
+$roleController = new RoleController($viewRenderer, $container['roleService']);
 
 // Crear router
 $router = new Router();
@@ -37,6 +45,7 @@ $router = new Router();
 // Registrar controladores en el router
 $router->registerController('home', $homeController);
 $router->registerController('user', $userController);
+$router->registerController('role', $roleController);
 
 // Rutas
 $router->get('', ['home', 'index']);
@@ -49,9 +58,18 @@ $router->get('/users/{id}/edit', ['user', 'edit']);
 $router->post('/users/{id}/update', ['user', 'update']);
 $router->post('/users/{id}/delete', ['user', 'delete']);
 
+
+// Role routes
+$router->get('/roles', ['role', 'index']);
+$router->get('/roles/create', ['role', 'create']);
+$router->post('/roles/store', ['role', 'store']);
+$router->get('/roles/{id}/edit', ['role', 'edit']);
+$router->post('/roles/{id}/update', ['role', 'update']);
+$router->post('/roles/{id}/delete', ['role', 'delete']);
+
 // Get the request URI and method
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$base_path = '/supabase';
+$base_path = '/supabase-php';
 
 // Remove base path from the URI
 $uri = str_replace($base_path, '', $request_uri);
